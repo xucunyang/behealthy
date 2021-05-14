@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <declare-styleable name="CircularCoverView">
+        <attr format="dimension" name="left_top_radius"/>
+        <attr format="dimension" name="left_bottom_radius"/>
+        <attr format="dimension" name="right_top_radius"/>
+        <attr format="dimension" name="right_bottom_radius"/>
+        <attr format="color" name="cover_color"/>
+    </declare-styleable>
+    <declare-styleable name="ColorfulProgressCircle">
+        <attr format="color" name="outCircleStartColor"/>
+        <attr format="color" name="outCircleEndColor"/>
+        <attr format="color" name="middleCircleStartColor"/>
+        <attr format="color" name="middleCircleEndColor"/>
+        <attr format="color" name="innerCircleStartColor"/>
+        <attr format="color" name="innerCircleEndColor"/>
+        <attr format="boolean" name="animate"/>
+
+    </declare-styleable>
+
+
+
+</resources>
