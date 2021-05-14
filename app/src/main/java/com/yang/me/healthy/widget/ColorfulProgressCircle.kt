@@ -47,20 +47,19 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
     private val outCircleStartColor: Int
     private val outCircleEndColor: Int
     private val outCircleColorList: IntArray
-    private var outCirclePosition: FloatArray = floatArrayOf(0f, outDestDegree * 1f / 360f)
-    private val outCircleRect: RectF = RectF()
+    private var outCirclePosition: FloatArray = floatArrayOf(0f, outDestDegree / 360f)
 
     private val midCircleStartColor: Int
     private val midCircleEndColor: Int
     private val midCircleColorList: IntArray
-    private var midCirclePosition: FloatArray = floatArrayOf(0f, midDestDegree * 1f / 360f)
-    private val midCircleRect: RectF = RectF()
+    private var midCirclePosition: FloatArray = floatArrayOf(0f, midDestDegree / 360f)
 
     private val innerCircleStartColor: Int
     private val innerCircleEndColor: Int
     private val innerCircleColorList: IntArray
-    private var innerCirclePosition: FloatArray = floatArrayOf(0f, innerDestDegree * 1f / 360f)
-    private val innerCircleRect: RectF = RectF()
+    private var innerCirclePosition: FloatArray = floatArrayOf(0f, innerDestDegree / 360f)
+
+    private val circleRect: RectF = RectF()
 
     private var viewSize: Float = 0f
 
@@ -134,13 +133,13 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         // out circle
-        drawColorArc(canvas, outCircleColorList, outCirclePosition, arcWidth / 2, outCircleRect, outDestDegree)
+        drawColorArc(canvas, outCircleColorList, outCirclePosition, arcWidth / 2, outDestDegree)
         // mid
         val midOffset = arcWidth + arcWidth / 2f + circleSpace
-        drawColorArc(canvas, midCircleColorList, midCirclePosition, midOffset, midCircleRect, midDestDegree)
+        drawColorArc(canvas, midCircleColorList, midCirclePosition, midOffset, midDestDegree)
         // inner
         val innerCircleOffset = arcWidth * 2 + arcWidth / 2f + circleSpace + circleSpace
-        drawColorArc(canvas, innerCircleColorList, innerCirclePosition, innerCircleOffset, innerCircleRect, innerDestDegree)
+        drawColorArc(canvas, innerCircleColorList, innerCirclePosition, innerCircleOffset, innerDestDegree)
     }
 
     private fun drawColorArc(
@@ -148,7 +147,6 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
         colorList: IntArray,
         sweepPosition: FloatArray,
         offset: Float,
-        circleRect: RectF,
         destDegree: Float
     ) {
         // out circle
@@ -174,7 +172,7 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
         degree: Float,
         color: Int
     ) {
-        val destPi = (Math.PI / 180f * (degree - 90)) //换成弧度
+        val destPi = (Math.PI / 180f * (degree - 90f)) //换成弧度
         startEndCirclePaint.color = color
         canvas?.drawCircle(
             ((rect.left + rect.width() / 2 + radius * cos(destPi)).toFloat()),  //圆心x
