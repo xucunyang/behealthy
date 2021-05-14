@@ -23,7 +23,7 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
          */
         const val ARC_WIDTH_SCALE = 0.12
 
-        const val CIRCLE_SPACE = 2
+        const val CIRCLE_SPACE_SCALE = 0.01
 
         /**
          * 绘制圆弧时的开始位置，rect的上中位置开始
@@ -65,7 +65,7 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
 
     private val mPaint: Paint
 
-    private val circleSpace: Float
+    private var circleSpace: Float = 0.0f
 
     private val rotateMatrix = Matrix()
 
@@ -114,8 +114,6 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
 
         typedArray.recycle()
 
-        circleSpace = SizeUtil.dp2px(context, CIRCLE_SPACE.toFloat())
-
         mPaint = Paint()
         mPaint.style = Paint.Style.STROKE
         mPaint.isAntiAlias = true
@@ -127,6 +125,7 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         viewSize = measuredWidth.toFloat().coerceAtMost(measuredHeight.toFloat())
         arcWidth = (viewSize * ARC_WIDTH_SCALE).toFloat()
+        circleSpace = viewSize * CIRCLE_SPACE_SCALE.toFloat()
         mPaint.strokeWidth = arcWidth
     }
 

@@ -9,8 +9,8 @@
 
     <com.yang.me.healthy.widget.ColorfulProgressCircle
         android:id="@+id/colorful_progress"
-        android:layout_width="200dp"
-        android:layout_height="400dp"
+        android:layout_width="60dp"
+        android:layout_height="90dp"
         app:animate="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
