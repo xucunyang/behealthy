@@ -1,6 +1,7 @@
 package com.yang.me.healthy
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -30,11 +31,16 @@ class FirstFragment : Fragment() {
         }
 
         val colorfulProgressCircle = view.findViewById<ColorfulProgressCircle>(R.id.colorful_progress)
-        colorfulProgressCircle.outDestDegree = 300f
-        colorfulProgressCircle.midDestDegree = 320f
-        colorfulProgressCircle.innerDestDegree = 360f
+        colorfulProgressCircle.outDestDegree = 730f
+        colorfulProgressCircle.midDestDegree = 260f
+        colorfulProgressCircle.innerDestDegree = 270f
         colorfulProgressCircle.animateDuration = 1500
         colorfulProgressCircle.startAnimateProgress()
+
+//        Handler().postDelayed({
+//            colorfulProgressCircle.increaseWithAnim(-50f, 50f, 50f)
+//        },
+//        3000)
 
         val progressview1 = view.findViewById<ProgressView>(R.id.progress)
 

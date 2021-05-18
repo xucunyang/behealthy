@@ -150,17 +150,27 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
     ) {
         // out circle
         val centerX = viewSize / 2
+        if(destDegree > 360) {
+            sweepPosition[1] = 360f/ 360;
+        }
         val sweepGradient = SweepGradient(centerX, centerX, colorList, sweepPosition)
         //旋转渐变
-        rotateMatrix.setRotate(START_ANGLE, centerX, centerX)
+        rotateMatrix.setRotate(START_ANGLE + (destDegree - 360), centerX, centerX)
         sweepGradient.setLocalMatrix(rotateMatrix)
         mPaint.shader = sweepGradient
         circleRect.set(offset, offset, viewSize - offset, viewSize - offset)
-        // draw arc
-        canvas?.drawArc(circleRect, START_ANGLE, destDegree, false, mPaint)
+
+        if (destDegree <= 360) {
+            // draw arc
+            canvas?.drawArc(circleRect, START_ANGLE, destDegree, false, mPaint)
+        } else {
+            canvas?.drawArc(circleRect, START_ANGLE + (destDegree - 360), 360f, false, mPaint)
+        }
 
         // start and end circle
-        drawStartEndCircle(canvas, circleRect, centerX - offset, 0f, colorList[0])
+        if (destDegree < 360) {
+            drawStartEndCircle(canvas, circleRect, centerX - offset, 0f, colorList[0])
+        }
         drawStartEndCircle(canvas, circleRect, centerX - offset, destDegree, colorList[1])
     }
 
@@ -213,6 +223,53 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
                         outDestDegree = originOutDestDegree
                         midDestDegree = originMidDestDegree
                         innerDestDegree = originInnerDestDegree
+                        invalidate()
+                    }
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                }
+            })
+
+            animator.start()
+        } else {
+            Log.w(TAG, "animate close")
+        }
+    }
+
+    fun increaseWithAnim(outDegree:Float, midDegree: Float, innerDegree: Float) {
+        if (animate) {
+            if (animator.isRunning) {
+                animator.end()
+            }
+
+            val originOutDestDegree = outDestDegree
+            val originMidDestDegree = midDestDegree
+            val originInnerDestDegree = innerDestDegree
+
+            animator.duration = animateDuration.toLong()
+            animator.interpolator = AccelerateDecelerateInterpolator()
+            animator.addUpdateListener { animation: ValueAnimator ->
+                run {
+                    val animatedValue = animation.animatedValue as Float
+                    outDestDegree = originOutDestDegree + animatedValue * outDegree
+                    midDestDegree = originMidDestDegree + animatedValue * midDegree
+                    innerDestDegree = originInnerDestDegree + animatedValue * innerDegree
+                    invalidate()
+                }
+            }
+            animator.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    ColorfulProgressCircle.run {
+                        outDestDegree += outDegree
+                        midDestDegree += midDegree
+                        innerDestDegree += innerDegree
                         invalidate()
                     }
                 }
