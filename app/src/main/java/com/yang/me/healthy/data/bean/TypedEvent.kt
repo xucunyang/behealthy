@@ -16,8 +16,6 @@ import androidx.room.PrimaryKey
  */
 @Entity
 data class TypedEvent(
-    @PrimaryKey(autoGenerate = true)
-    var id: Int,
     /**
      * 事件名称
      */
@@ -29,7 +27,7 @@ data class TypedEvent(
     /**
      * 创建时间
      */
-    var createTimeStamp: Long,
+    var createTimeStamp: Long = System.currentTimeMillis(),
     /**
      * 目标
      */
@@ -38,4 +36,7 @@ data class TypedEvent(
      * 单位
      */
     var unit: String
-)
+) {
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0
+}

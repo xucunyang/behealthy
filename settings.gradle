@@ -1,2 +1,3 @@
+include ':BaseLib'
 include ':app'
 rootProject.name = "BeHealthy"

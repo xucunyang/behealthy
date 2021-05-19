@@ -8,7 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
+import com.yang.me.healthy.data.AbsAppDataBase
+import com.yang.me.healthy.data.bean.TypedEvent
 import com.yang.me.healthy.widget.ColorfulProgressCircle
+import kotlin.concurrent.thread
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -53,6 +56,19 @@ class FirstFragment : Fragment() {
         //设置动画时间
         progressview1.setDuration(500);
         progressview1.startAnim()
+
+
+        thread {
+            AbsAppDataBase.dataBase.getTypedEventDao().insert(TypedEvent(
+                eventName = "喝水",
+                isPositive = true,
+                targetProgress = 8,
+                unit = "杯"
+            ))
+        }
+
+
+
 
     }
 }

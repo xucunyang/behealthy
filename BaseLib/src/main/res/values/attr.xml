@@ -18,4 +18,6 @@
 
     </declare-styleable>
 
+    <item name="status_bar_custom" type="id" />
+
 </resources>

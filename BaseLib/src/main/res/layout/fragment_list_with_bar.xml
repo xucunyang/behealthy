@@ -1,0 +1,75 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/top_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <ImageView
+                    android:id="@+id/back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingStart="21dp"
+                    android:paddingTop="12dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="12dp"
+                    android:src="@mipmap/ic_back_white"
+                    android:tint="@color/black" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:text="热播专辑"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:paddingStart="10dp"
+                    android:paddingTop="12dp"
+                    android:paddingEnd="18dp"
+                    android:paddingBottom="12dp"
+                    android:src="@mipmap/more"
+                    android:text="清空"
+                    android:textSize="17sp"
+                    android:tint="@color/white" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never" />
+
+        <include
+            android:id="@+id/include_no_net"
+            layout="@layout/view_no_net" />
+
+        <include
+            android:id="@+id/include_no_data"
+            layout="@layout/view_no_data" />
+
+    </LinearLayout>
+</layout>

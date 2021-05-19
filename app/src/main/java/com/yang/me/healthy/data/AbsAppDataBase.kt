@@ -8,6 +8,8 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.yang.me.healthy.App
 import com.yang.me.healthy.data.bean.EventDetail
 import com.yang.me.healthy.data.bean.TypedEvent
+import com.yang.me.healthy.data.dao.EventDetailDao
+import com.yang.me.healthy.data.dao.TypedEventDao
 
 @Database(
     entities = [
@@ -46,5 +48,9 @@ abstract class AbsAppDataBase(context: Context) : RoomDatabase() {
     override fun clearAllTables() {
         TODO("Not yet implemented")
     }
+
+    abstract fun getEventDetailDao(): EventDetailDao
+
+    abstract fun getTypedEventDao(): TypedEventDao
 
 }
