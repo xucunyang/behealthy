@@ -25,7 +25,7 @@
             android:layout_gravity="end|center_vertical"
             android:layout_marginEnd="40dp"
             android:padding="3dp"
-            android:src="@drawable/dcloud_tabbar_dot" />
+            android:src="@drawable/edittext_shape" />
 
     </FrameLayout>
 

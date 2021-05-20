@@ -10,12 +10,12 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <com.android.jsbcmasterapp.utils.ColorFilterImageView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/icon_no_net" />
 
-        <com.android.jsbcmasterapp.view.baseview.CTextView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -24,7 +24,7 @@
             android:gravity="center"
             android:text="@string/net_warning" />
 
-        <com.android.jsbcmasterapp.view.baseview.CTextView
+        <TextView
             android:id="@+id/tv_reload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

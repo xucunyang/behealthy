@@ -10,6 +10,8 @@ import androidx.navigation.fragment.findNavController
 import com.yang.me.healthy.data.AppDataBase
 import com.yang.me.healthy.data.bean.TypedEvent
 import com.yang.me.healthy.widget.ColorfulProgressCircle
+import com.yang.me.lib.extension.launchWrapped
+import com.yang.me.lib.extension.toast
 import kotlin.concurrent.thread
 
 /**
@@ -57,14 +59,18 @@ class FirstFragment : Fragment() {
         progressview1.startAnim()
 
 
-        thread {
+        launchWrapped(this, {
             AppDataBase.get().getTypedEventDao().insert(TypedEvent(
                 eventName = "喝水",
                 isPositive = true,
                 targetProgress = 8,
                 unit = "杯"
             ))
-        }
+
+            AppDataBase.get().getTypedEventDao().getAllTypedEvent().size
+        },  {
+            context?.let { it1 -> toast(it1, "size is $it") }
+        })
 
     }
 }

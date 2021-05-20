@@ -12,4 +12,6 @@
 
     <string name="reload">重新加载</string>
     <string name="data_warning">请耐心等待，相关内容正在准备当中...</string>
+
+    <string name="net_warning">您的网络连接好像有问题，请检查后再重新加载吧</string>
 </resources>

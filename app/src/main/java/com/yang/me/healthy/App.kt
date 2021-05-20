@@ -2,6 +2,7 @@ package com.yang.me.healthy
 
 import android.app.Application
 import android.content.Context
+import timber.log.Timber
 
 class App : Application() {
 
@@ -16,6 +17,10 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         context = this
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
     }
 
 }

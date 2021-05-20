@@ -1,7 +1,5 @@
 package com.yang.me.lib.bean;
 
-import com.android.jsbcmasterapp.model.BaseBean;
-
 public class SingleSelectBean extends BaseBean {
     private String itemName;
     private boolean isDefaultSelect;
