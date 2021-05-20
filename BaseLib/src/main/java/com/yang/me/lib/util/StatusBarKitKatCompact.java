@@ -1,4 +1,4 @@
-package com.yang.me.lib;
+package com.yang.me.lib.util;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -18,6 +18,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.yang.me.lib.R;
 
 import java.lang.reflect.Field;
 

@@ -1,8 +1,8 @@
-package com.yang.me.lib;
+package com.yang.me.lib.vh;
 
 import android.view.ViewGroup;
 
-import com.yang.me.lib.adapter.BaseAutoBindVH;
+import com.yang.me.lib.R;
 import com.yang.me.lib.bean.SingleSelectBean;
 import com.yang.me.lib.databinding.ItemNameSelectBinding;
 

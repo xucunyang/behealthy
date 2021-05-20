@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.yang.me.healthy.R
-import com.yang.me.healthy.util.SizeUtil
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -148,29 +147,31 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
         offset: Float,
         destDegree: Float
     ) {
-        // out circle
         val centerX = viewSize / 2
-        if(destDegree > 360) {
-            sweepPosition[1] = 360f/ 360;
+        if(destDegree > 360f) {
+            sweepPosition[1] = 360f / 360;
         }
         val sweepGradient = SweepGradient(centerX, centerX, colorList, sweepPosition)
         //旋转渐变
-        rotateMatrix.setRotate(START_ANGLE + (destDegree - 360), centerX, centerX)
+        if (destDegree > 360f) {
+            rotateMatrix.setRotate(START_ANGLE + (destDegree - 360), centerX, centerX)
+        } else {
+            rotateMatrix.setRotate(START_ANGLE, centerX, centerX)
+        }
         sweepGradient.setLocalMatrix(rotateMatrix)
         mPaint.shader = sweepGradient
+
         circleRect.set(offset, offset, viewSize - offset, viewSize - offset)
 
+        // draw arc
         if (destDegree <= 360) {
-            // draw arc
+            // start circle 超过一周后不绘制开始的圆
+            drawStartEndCircle(canvas, circleRect, centerX - offset, 0f, colorList[0])
             canvas?.drawArc(circleRect, START_ANGLE, destDegree, false, mPaint)
         } else {
             canvas?.drawArc(circleRect, START_ANGLE + (destDegree - 360), 360f, false, mPaint)
         }
 
-        // start and end circle
-        if (destDegree < 360) {
-            drawStartEndCircle(canvas, circleRect, centerX - offset, 0f, colorList[0])
-        }
         drawStartEndCircle(canvas, circleRect, centerX - offset, destDegree, colorList[1])
     }
 

@@ -1,4 +1,4 @@
-package com.yang.me.lib;
+package com.yang.me.lib.util;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

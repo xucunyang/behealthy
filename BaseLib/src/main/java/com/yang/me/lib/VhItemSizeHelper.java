@@ -42,7 +42,7 @@ public class VhItemSizeHelper {
         this.itemHorSpace = (int) dp2px(itemHorSpace);
     }
 
-    public float getItemWidth(Context context) {
+    public float getItemWidth() {
         float totalSpanWidth = ScreenUtils.getScreenWidth(context) - getTotalHorExtraSpace();
         return totalSpanWidth / spanCount;
     }
@@ -60,7 +60,7 @@ public class VhItemSizeHelper {
     }
 
     public void setItemViewWidth(ViewGroup itemView) {
-        setItemWidth(itemView, (int) getItemWidth(context), ViewGroup.LayoutParams.WRAP_CONTENT);
+        setItemWidth(itemView, (int) getItemWidth(), ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     public int getStartEndSpace() {

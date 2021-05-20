@@ -1,11 +1,10 @@
-package com.yang.me.lib;
+package com.yang.me.lib.adapter;
 
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
-import com.yang.me.lib.adapter.BaseAutoBindVHAdapter;
-import com.yang.me.lib.adapter.BaseViewHolder;
+import com.yang.me.lib.vh.BaseViewHolder;
 import com.yang.me.lib.bean.BaseBean;
 
 import java.util.List;

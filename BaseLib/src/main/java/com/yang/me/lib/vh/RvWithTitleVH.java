@@ -1,4 +1,4 @@
-package com.yang.me.lib;
+package com.yang.me.lib.vh;
 
 import android.content.Context;
 import android.util.Log;
@@ -12,9 +12,7 @@ import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.yang.me.lib.adapter.BaseAutoBindVH;
 import com.yang.me.lib.adapter.BaseAutoBindVHAdapter;
-import com.yang.me.lib.adapter.BaseViewHolder;
 import com.yang.me.lib.adapter.OnItemClickListener;
 import com.yang.me.lib.bean.BaseBean;
 

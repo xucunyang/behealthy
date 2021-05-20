@@ -24,10 +24,12 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.yang.me.lib.adapter.BaseWrapAdapter;
 import com.yang.me.lib.adapter.OnItemClickListener;
 import com.yang.me.lib.bean.SingleSelectBean;
 import com.yang.me.lib.databinding.DialogBaseSelectBinding;
 import com.yang.me.lib.util.TestUtil;
+import com.yang.me.lib.vh.SingleSelectVH;
 
 import java.util.List;
 

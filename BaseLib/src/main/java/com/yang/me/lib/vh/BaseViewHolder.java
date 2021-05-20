@@ -1,4 +1,4 @@
-package com.yang.me.lib.adapter;
+package com.yang.me.lib.vh;
 
 import android.view.View;
 

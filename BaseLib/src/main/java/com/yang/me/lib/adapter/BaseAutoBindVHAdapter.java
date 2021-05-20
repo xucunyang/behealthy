@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.yang.me.lib.bean.BaseBean;
+import com.yang.me.lib.vh.BaseViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public abstract class BaseAutoBindVHAdapter<VH extends BaseViewHolder<T>, T exte
     private OnItemClickListener<T> mClickListener;
 
     public BaseAutoBindVHAdapter(List<T> data) {
-        this.data = data;
+        this.data.addAll(data);
     }
 
     @Override
@@ -64,7 +65,8 @@ public abstract class BaseAutoBindVHAdapter<VH extends BaseViewHolder<T>, T exte
     }
 
     public void updateData(List<T> list) {
-        this.data = list;
+        this.data.clear();
+        this.data.addAll(list);
         notifyDataSetChanged();
     }
 

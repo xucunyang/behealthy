@@ -1,14 +1,13 @@
 package com.yang.me.healthy
 
 import android.os.Bundle
-import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
-import com.yang.me.healthy.data.AbsAppDataBase
+import com.yang.me.healthy.data.AppDataBase
 import com.yang.me.healthy.data.bean.TypedEvent
 import com.yang.me.healthy.widget.ColorfulProgressCircle
 import kotlin.concurrent.thread
@@ -35,8 +34,8 @@ class FirstFragment : Fragment() {
 
         val colorfulProgressCircle = view.findViewById<ColorfulProgressCircle>(R.id.colorful_progress)
         colorfulProgressCircle.outDestDegree = 730f
-        colorfulProgressCircle.midDestDegree = 260f
-        colorfulProgressCircle.innerDestDegree = 270f
+        colorfulProgressCircle.midDestDegree = 660f
+        colorfulProgressCircle.innerDestDegree = 570f
         colorfulProgressCircle.animateDuration = 1500
         colorfulProgressCircle.startAnimateProgress()
 
@@ -59,16 +58,13 @@ class FirstFragment : Fragment() {
 
 
         thread {
-            AbsAppDataBase.dataBase.getTypedEventDao().insert(TypedEvent(
+            AppDataBase.get().getTypedEventDao().insert(TypedEvent(
                 eventName = "喝水",
                 isPositive = true,
                 targetProgress = 8,
                 unit = "杯"
             ))
         }
-
-
-
 
     }
 }

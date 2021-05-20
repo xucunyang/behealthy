@@ -3,7 +3,8 @@ package com.yang.me.lib;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.yang.me.lib.adapter.BaseViewHolder;
+import com.yang.me.lib.vh.BaseViewHolder;
+import com.yang.me.lib.adapter.BaseWrapAdapter;
 import com.yang.me.lib.bean.BaseBean;
 import com.yang.me.lib.databinding.FragmentListWithBarBinding;
 

@@ -1,10 +1,8 @@
 package com.yang.me.healthy.data
 
-import android.content.Context
 import android.util.Log
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
-import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.yang.me.healthy.App
 import com.yang.me.healthy.data.bean.EventDetail
 import com.yang.me.healthy.data.bean.TypedEvent
@@ -17,36 +15,35 @@ import com.yang.me.healthy.data.dao.TypedEventDao
         TypedEvent::class
     ], version = 1, exportSchema = false
 )
-abstract class AbsAppDataBase(context: Context) : RoomDatabase() {
+abstract class AppDataBase() : RoomDatabase() {
+
     companion object {
-        const val DB_NAME = "be_healthy_db"
+        private const val DB_NAME = "be_healthy.db"
 
-        private val TAG = "AbsAppDataBase";
+        private const val TAG = "AbsAppDataBase";
 
-        var dataBase: AbsAppDataBase
+        @Volatile
+        private var instance: AppDataBase? = null
 
-        init {
-            dataBase = Room.databaseBuilder(App.getContext(), AbsAppDataBase::class.java, DB_NAME)
+        fun get(): AppDataBase {
+            return instance ?: synchronized(this) {
+                instance ?: getDB().also {
+                    instance = it
+                }
+            }
+        }
+
+        private fun getDB() =
+            Room.databaseBuilder(App.getContext(), AppDataBase::class.java, DB_NAME)
                 .addCallback(object : Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
                         Log.i(TAG, "on create");
                     }
-                }).build()
-        }
-    }
+                })
+                .allowMainThreadQueries()
+                .build()
 
-
-    override fun createOpenHelper(config: DatabaseConfiguration?): SupportSQLiteOpenHelper {
-        TODO("Not yet implemented")
-    }
-
-    override fun createInvalidationTracker(): InvalidationTracker {
-        TODO("Not yet implemented")
-    }
-
-    override fun clearAllTables() {
-        TODO("Not yet implemented")
     }
 
     abstract fun getEventDetailDao(): EventDetailDao

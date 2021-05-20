@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 
+import com.yang.me.lib.util.StatusBarUtil;
 import com.yang.me.lib.util.Util;
 
 /**

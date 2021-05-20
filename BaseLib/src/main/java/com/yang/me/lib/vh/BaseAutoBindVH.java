@@ -1,4 +1,4 @@
-package com.yang.me.lib.adapter;
+package com.yang.me.lib.vh;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
 import com.bumptech.glide.Glide;
+import com.yang.me.lib.adapter.OnItemClickListener;
 import com.yang.me.lib.bean.BaseBean;
 import com.yang.me.lib.util.SizeUtils;
 import com.yang.me.lib.util.Util;

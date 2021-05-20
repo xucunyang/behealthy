@@ -47,8 +47,9 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
 
     // room
-    implementation 'android.arch.persistence.room:runtime:1.0.0'
-    annotationProcessor 'android.arch.persistence.room:compiler:1.0.0'
+    implementation "androidx.room:room-runtime:2.3.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
+    kapt "androidx.room:room-compiler:2.3.0"
 
     //Glide
     api 'com.github.bumptech.glide:glide:4.8.0'
