@@ -24,6 +24,8 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
 
         const val CIRCLE_SPACE_SCALE = 0.01
 
+        const val SHADOW_DEGREE_OFFSET = 5
+
         /**
          * 绘制圆弧时的开始位置，rect的上中位置开始
          */
@@ -58,6 +60,8 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
     private val innerCircleColorList: IntArray
     private var innerCirclePosition: FloatArray = floatArrayOf(0f, innerDestDegree / 360f)
 
+    private var shadowColorArray: IntArray
+
     private val circleRect: RectF = RectF()
 
     private var viewSize: Float = 0f
@@ -71,6 +75,8 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
     private var arcWidth: Float = 0f
 
     private val startEndCirclePaint = Paint()
+
+    private val shadowPaint: Paint = Paint()
 
     init {
         val typedArray =
@@ -118,6 +124,12 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
         mPaint.isAntiAlias = true
 
         startEndCirclePaint.style = Paint.Style.FILL
+
+        shadowColorArray = intArrayOf(
+            resources.getColor(R.color.black_50),
+            resources.getColor(R.color.black_25),
+            resources.getColor(R.color.black_5)
+        )
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -137,7 +149,13 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
         drawColorArc(canvas, midCircleColorList, midCirclePosition, midOffset, midDestDegree)
         // inner
         val innerCircleOffset = arcWidth * 2 + arcWidth / 2f + circleSpace + circleSpace
-        drawColorArc(canvas, innerCircleColorList, innerCirclePosition, innerCircleOffset, innerDestDegree)
+        drawColorArc(
+            canvas,
+            innerCircleColorList,
+            innerCirclePosition,
+            innerCircleOffset,
+            innerDestDegree
+        )
     }
 
     private fun drawColorArc(
@@ -148,7 +166,7 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
         destDegree: Float
     ) {
         val centerX = viewSize / 2
-        if(destDegree > 360f) {
+        if (destDegree > 360f) {
             sweepPosition[1] = 360f / 360;
         }
         val sweepGradient = SweepGradient(centerX, centerX, colorList, sweepPosition)
@@ -182,6 +200,21 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
         degree: Float,
         color: Int
     ) {
+        val shadowPi = (Math.PI / 180f * (degree - 90f + SHADOW_DEGREE_OFFSET))
+        // shadow
+        val shadowCx = (rect.left + rect.width() / 2 + radius * cos(shadowPi)).toFloat()
+        val shadowCy = (rect.top + rect.height() / 2f + radius * sin(shadowPi)).toFloat()
+        val radialGradient = RadialGradient(
+            shadowCx,
+            shadowCy,
+            arcWidth / 2,
+            shadowColorArray,
+            null,
+            Shader.TileMode.CLAMP
+        )
+        shadowPaint.shader = radialGradient
+        canvas?.drawCircle(shadowCx, shadowCy, arcWidth / 2, shadowPaint)
+
         val destPi = (Math.PI / 180f * (degree - 90f)) //换成弧度
         startEndCirclePaint.color = color
         canvas?.drawCircle(
@@ -241,7 +274,7 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
         }
     }
 
-    fun increaseWithAnim(outDegree:Float, midDegree: Float, innerDegree: Float) {
+    fun increaseWithAnim(outDegree: Float, midDegree: Float, innerDegree: Float) {
         if (animate) {
             if (animator.isRunning) {
                 animator.end()
