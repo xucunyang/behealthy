@@ -17,7 +17,7 @@ data class EventDetail(
     /**
      * 时间
      */
-    var timeStamp: Long
+    var timeStamp: Long = System.currentTimeMillis()
 ) : BaseBean() {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0

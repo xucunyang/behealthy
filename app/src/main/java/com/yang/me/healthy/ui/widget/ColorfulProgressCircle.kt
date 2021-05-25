@@ -32,7 +32,7 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
         const val START_ANGLE = -90f
     }
 
-    var animateDuration = 800 //ms
+    var animateDuration = 1800 //ms
 
     var circleSize = 3
 

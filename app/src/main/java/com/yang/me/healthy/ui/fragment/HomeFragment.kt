@@ -116,7 +116,7 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
             asyncBlock = {
                 typedEventDao.getAllTypedEvent()
             },
-            uiBlock = {
+            uiBlock = { it ->
                 if (it.isNotEmpty()) {
                     baseWrapAdapter = BaseWrapAdapter<ItemEventVH, TypedEvent>(it,
                         BaseWrapAdapter.VhProvider<ItemEventVH> { parent, _ ->
@@ -125,41 +125,32 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
                     baseWrapAdapter.setClickListener { view, position, bean ->
                         launchWrapped(HomeFragment@ this,
                             {
-                                eventDetailDao.insert(
-                                    EventDetail(
-                                        bean.id,
-                                        1,
-                                        System.currentTimeMillis()
-                                    )
-                                )
+                                eventDetailDao.insert(EventDetail(bean.id, 1))
                                 typedEventDao.getAllTypedEvent()
-                            }, {
-                                if (it.isNotEmpty()) {
-                                    if (it.isNotEmpty()) {
-                                        val outEvent = it[0]
-                                        var outTempProgress: Float = 0f
-                                        var midTempProgress: Float = 0f
-                                        var innerTempProgress: Float = 0f
-                                        for (index in it.indices) {
-                                            if (it[index].id == bean.id) {
-                                                if (index == 0) {
-                                                    outTempProgress =
-                                                        360f * 1 / it[index].targetProgress
-                                                } else if (index == 1) {
-                                                    midTempProgress =
-                                                        360f * 1 / it[index].targetProgress
-                                                } else if (index == 2) {
-                                                    innerTempProgress =
-                                                        360f * 1 / it[index].targetProgress
-                                                }
+                            }, { list ->
+                                if (list.isNotEmpty()) {
+                                    var outTempProgress: Float = 0f
+                                    var midTempProgress: Float = 0f
+                                    var innerTempProgress: Float = 0f
+                                    for (index in it.indices) {
+                                        if (list[index].id == bean.id) {
+                                            if (index == 0) {
+                                                outTempProgress =
+                                                    360f * 1 / list[index].targetProgress
+                                            } else if (index == 1) {
+                                                midTempProgress =
+                                                    360f * 1 / list[index].targetProgress
+                                            } else if (index == 2) {
+                                                innerTempProgress =
+                                                    360f * 1 / list[index].targetProgress
                                             }
                                         }
-                                        mViewBinding.colorfulProgress.increaseWithAnim(
-                                            outTempProgress,
-                                            midTempProgress,
-                                            innerTempProgress
-                                        )
                                     }
+                                    mViewBinding.colorfulProgress.increaseWithAnim(
+                                        outTempProgress,
+                                        midTempProgress,
+                                        innerTempProgress
+                                    )
                                 }
                             }
                         )
