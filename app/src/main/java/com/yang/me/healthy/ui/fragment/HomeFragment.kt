@@ -17,6 +17,7 @@ import com.yang.me.lib.extension.launchWrapped
 import com.yang.me.lib.extension.toast
 import com.yang.me.lib.util.Util
 import java.util.*
+import kotlin.collections.HashMap
 
 
 /**
@@ -49,7 +50,31 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
         mViewBinding.date.text = Util.getSimpleDateFormat(System.currentTimeMillis(), "yyyy-MM-dd")
         mViewBinding.week.text = Util.getWeek(Date(System.currentTimeMillis()))
 
+        initCircleProgress()
         initAddRv()
+    }
+
+    private fun initCircleProgress() {
+        launchWrapped(this,
+            {
+                var dataMap: Map<TypedEvent, Float> = mutableMapOf()
+                val allTypedEvent = typedEventDao.getAllTypedEvent()
+                for (typedEvent in allTypedEvent) {
+                    val typedDetailList =
+                        eventDetailDao.getTodayDetailTotalByType(typedEvent.id)
+                    dataMap[typedEvent] =getTotalCount(typedDetailList)
+                }
+            }, {
+
+            })
+    }
+
+    fun getTotalCount(list: List<EventDetail>): Int {
+        var sum: Int = 0
+        for (eventDetail in list) {
+            sum += eventDetail.tempProgress
+        }
+        return sum
     }
 
     private fun initAddRv() {
