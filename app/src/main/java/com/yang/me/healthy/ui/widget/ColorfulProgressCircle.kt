@@ -76,7 +76,7 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
 
     private val startEndCirclePaint = Paint()
 
-    private val shadowPaint: Paint = Paint()
+    private val shadowPaint = Paint()
 
     init {
         val typedArray =
