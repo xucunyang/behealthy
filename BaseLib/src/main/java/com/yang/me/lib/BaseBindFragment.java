@@ -23,7 +23,8 @@ import com.yang.me.lib.util.Util;
  * Time: 2021/4/7 14:52
  * </pre>
  */
-public abstract class BaseBindFragment<ViewBinding extends ViewDataBinding> extends Fragment {
+public abstract class BaseBindFragment<ViewBinding extends ViewDataBinding>
+        extends Fragment implements View.OnClickListener {
 
     protected final String TAG = this.getClass().getSimpleName();
 
@@ -73,6 +74,10 @@ public abstract class BaseBindFragment<ViewBinding extends ViewDataBinding> exte
                 Util.setAndroidNativeLightStatusBar(getActivity(), true);
             }
         }
+    }
+
+    @Override
+    public void onClick(View v) {
     }
 
     protected abstract int getFragmentLayoutId();

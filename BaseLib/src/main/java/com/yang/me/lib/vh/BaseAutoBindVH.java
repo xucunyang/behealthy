@@ -38,22 +38,9 @@ public abstract class BaseAutoBindVH<VDB extends ViewDataBinding, T extends Base
         this(parent.getContext(), (VDB) getViewDataBinding(parent.getContext(), layoutId, parent));
     }
 
-    @Override
-    public void onBindVH(int position, T bean) {
-        refreshUi(position, bean);
-    }
-
-    public void refreshUi(final int i, final T baseBean) {
+    public void setViewSize() {
         Util.setViewLayoutParams(itemView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        if (mItemClickListener != null) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mItemClickListener.onItemClick(itemView, i, (T) baseBean);
-                }
-            });
-        }
     }
 
     protected T castBean(BaseBean baseBean) {

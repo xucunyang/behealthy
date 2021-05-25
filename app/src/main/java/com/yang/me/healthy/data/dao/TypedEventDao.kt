@@ -9,6 +9,9 @@ interface TypedEventDao {
     @Query("SELECT * FROM TypedEvent")
     fun getAllTypedEvent(): List<TypedEvent>
 
+    @Query("SELECT * FROM TypedEvent WHERE eventName=:eventName")
+    fun getAllTypedEventByName(eventName: String): List<TypedEvent>
+
     @Query("SELECT * FROM TypedEvent WHERE id=:id")
     fun getTypedEventById(id: Int): TypedEvent
 

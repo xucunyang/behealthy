@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Build;
 import android.util.Log;
 import android.util.TypedValue;
@@ -196,4 +197,12 @@ public class Util {
                 String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, seconds)
                 : String.format(Locale.US, "%02d:%02d", minutes, seconds);
     }
+
+
+    public static void setNavigationBarColor(Activity activity, int colorResId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.getWindow().setNavigationBarColor(activity.getResources().getColor(colorResId));
+        }
+    }
+
 }

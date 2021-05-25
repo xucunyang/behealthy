@@ -33,7 +33,7 @@ public class BaseWrapAdapter<VH extends BaseViewHolder<T>, T extends BaseBean>
         this.mVhProvider = mVhProvider;
     }
 
-    public interface VhProvider<VH extends BaseViewHolder> {
+    public interface VhProvider<VH extends BaseViewHolder<?>> {
 
         VH createVH(@NonNull ViewGroup parent, int viewType);
 

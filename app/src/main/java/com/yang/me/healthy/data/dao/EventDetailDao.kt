@@ -15,6 +15,10 @@ interface EventDetailDao {
     @Query("SELECT * FROM EventDetail WHERE timeStamp >=:start AND timeStamp <=:end")
     fun getEventDetailByTimeInterval(start: Long, end: Long): List<EventDetail>
 
+//    fun getTodayTypeEventTotal() {
+//        getEventDetailByTimeInterval()
+//    }
+
     @Insert
     fun insert(event: EventDetail)
 

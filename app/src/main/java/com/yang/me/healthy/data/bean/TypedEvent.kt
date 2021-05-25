@@ -2,6 +2,7 @@ package com.yang.me.healthy.data.bean
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.yang.me.lib.bean.BaseBean
 
 
 /**
@@ -36,7 +37,7 @@ data class TypedEvent(
      * 单位
      */
     var unit: String
-) {
+) : BaseBean() {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 }
