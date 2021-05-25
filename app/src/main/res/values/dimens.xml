@@ -1,3 +1,12 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="title_text">22sp</dimen>
+    <dimen name="sub_title_text">20sp</dimen>
+    <dimen name="normal_text">18sp</dimen>
+    <dimen name="item_text">18sp</dimen>
+    <dimen name="sub_item_text">13sp</dimen>
+
+    <dimen name="ic_padding">12dp</dimen>
+
 </resources>

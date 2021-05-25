@@ -1,4 +1,4 @@
-package com.yang.me.healthy.widget;
+package com.yang.me.healthy.ui.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;

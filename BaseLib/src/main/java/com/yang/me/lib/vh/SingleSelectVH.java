@@ -13,8 +13,6 @@ public class SingleSelectVH extends BaseAutoBindVH<ItemNameSelectBinding, Single
 
     @Override
     public void onBindVH(int i, SingleSelectBean baseBean) {
-        super.refreshUi(i, baseBean);
-
         SingleSelectBean bean = castBean(baseBean);
 
         setText(mViewBinding.itemName, bean.getItemName());
