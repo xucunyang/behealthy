@@ -125,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/shape_button_border_r_4"
+                android:background="@drawable/shape_button_red_border_r_4"
                 android:gravity="center"
                 android:paddingStart="50dp"
                 android:paddingTop="5dp"

@@ -40,4 +40,6 @@ data class TypedEvent(
 ) : BaseBean() {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
+
+    var totalProgress: Int = 0
 }
