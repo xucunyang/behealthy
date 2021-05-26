@@ -5,17 +5,17 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.yang.me.healthy.R
+import timber.log.Timber
 import kotlin.math.cos
 import kotlin.math.sin
 
 class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     companion object {
-        val TAG = "ColorfulProgressCircle"
+        const val TAG = "ColorfulProgressCircle"
 
         /**
          * 单个圆弧的宽度与整体款的比
@@ -34,31 +34,26 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
 
     var animateDuration = 1800 //ms
 
-    var circleSize = 3
-
     /**
      * 目标角度
      */
-    var outDestDegree: Float = 90f
-    var midDestDegree: Float = 90f
-    var innerDestDegree: Float = 90f
+    var outDestDegree: Float = 0f
+    var midDestDegree: Float = 0f
+    var innerDestDegree: Float = 0f
 
     private val animate: Boolean
 
     private val outCircleStartColor: Int
     private val outCircleEndColor: Int
     private val outCircleColorList: IntArray
-    private var outCirclePosition: FloatArray = floatArrayOf(0f, outDestDegree / 360f)
 
     private val midCircleStartColor: Int
     private val midCircleEndColor: Int
     private val midCircleColorList: IntArray
-    private var midCirclePosition: FloatArray = floatArrayOf(0f, midDestDegree / 360f)
 
     private val innerCircleStartColor: Int
     private val innerCircleEndColor: Int
     private val innerCircleColorList: IntArray
-    private var innerCirclePosition: FloatArray = floatArrayOf(0f, innerDestDegree / 360f)
 
     private var shadowColorArray: IntArray
 
@@ -143,31 +138,25 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         // out circle
-        drawColorArc(canvas, outCircleColorList, outCirclePosition, arcWidth / 2, outDestDegree)
+        drawColorArc(canvas, outCircleColorList, arcWidth / 2, outDestDegree)
         // mid
         val midOffset = arcWidth + arcWidth / 2f + circleSpace
-        drawColorArc(canvas, midCircleColorList, midCirclePosition, midOffset, midDestDegree)
+        drawColorArc(canvas, midCircleColorList, midOffset, midDestDegree)
         // inner
         val innerCircleOffset = arcWidth * 2 + arcWidth / 2f + circleSpace + circleSpace
-        drawColorArc(
-            canvas,
-            innerCircleColorList,
-            innerCirclePosition,
-            innerCircleOffset,
-            innerDestDegree
-        )
+        drawColorArc(canvas, innerCircleColorList, innerCircleOffset, innerDestDegree)
     }
 
     private fun drawColorArc(
         canvas: Canvas?,
         colorList: IntArray,
-        sweepPosition: FloatArray,
         offset: Float,
         destDegree: Float
     ) {
         val centerX = viewSize / 2
+        val sweepPosition = floatArrayOf(0f, destDegree / 360f)
         if (destDegree > 360f) {
-            sweepPosition[1] = 360f / 360;
+            sweepPosition[1] = 360f / 360
         }
         val sweepGradient = SweepGradient(centerX, centerX, colorList, sweepPosition)
         //旋转渐变
@@ -184,13 +173,14 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
         // draw arc
         if (destDegree <= 360) {
             // start circle 超过一周后不绘制开始的圆
-            drawStartEndCircle(canvas, circleRect, centerX - offset, 0f, colorList[0])
             canvas?.drawArc(circleRect, START_ANGLE, destDegree, false, mPaint)
+            drawStartEndCircle(canvas, circleRect, centerX - offset, 0f, colorList[0])
         } else {
             canvas?.drawArc(circleRect, START_ANGLE + (destDegree - 360), 360f, false, mPaint)
         }
 
-        drawStartEndCircle(canvas, circleRect, centerX - offset, destDegree, colorList[1])
+        // end circle
+        drawStartEndCircle(canvas, circleRect, centerX - offset, destDegree, colorList[1], true)
     }
 
     private fun drawStartEndCircle(
@@ -198,22 +188,25 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
         rect: RectF,
         radius: Float,
         degree: Float,
-        color: Int
+        color: Int,
+        showShadow: Boolean = false
     ) {
-        val shadowPi = (Math.PI / 180f * (degree - 90f + SHADOW_DEGREE_OFFSET))
-        // shadow
-        val shadowCx = (rect.left + rect.width() / 2 + radius * cos(shadowPi)).toFloat()
-        val shadowCy = (rect.top + rect.height() / 2f + radius * sin(shadowPi)).toFloat()
-        val radialGradient = RadialGradient(
-            shadowCx,
-            shadowCy,
-            arcWidth / 2,
-            shadowColorArray,
-            null,
-            Shader.TileMode.CLAMP
-        )
-        shadowPaint.shader = radialGradient
-        canvas?.drawCircle(shadowCx, shadowCy, arcWidth / 2, shadowPaint)
+        if (showShadow) {
+            val shadowPi = (Math.PI / 180f * (degree - 90f + SHADOW_DEGREE_OFFSET))
+            // shadow
+            val shadowCx = (rect.left + rect.width() / 2 + radius * cos(shadowPi)).toFloat()
+            val shadowCy = (rect.top + rect.height() / 2f + radius * sin(shadowPi)).toFloat()
+            val radialGradient = RadialGradient(
+                shadowCx,
+                shadowCy,
+                arcWidth / 2,
+                shadowColorArray,
+                null,
+                Shader.TileMode.CLAMP
+            )
+            shadowPaint.shader = radialGradient
+            canvas?.drawCircle(shadowCx, shadowCy, arcWidth / 2, shadowPaint)
+        }
 
         val destPi = (Math.PI / 180f * (degree - 90f)) //换成弧度
         startEndCirclePaint.color = color
@@ -241,7 +234,6 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
             animator.addUpdateListener { animation: ValueAnimator ->
                 run {
                     val animatedValue = animation.animatedValue as Float
-                    Log.w(TAG, "animate update: $animatedValue")
                     outDestDegree = animatedValue * originOutDestDegree
                     midDestDegree = animatedValue * originMidDestDegree
                     innerDestDegree = animatedValue * originInnerDestDegree
@@ -267,10 +259,9 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
                 override fun onAnimationStart(animation: Animator?) {
                 }
             })
-
             animator.start()
         } else {
-            Log.w(TAG, "animate close")
+            Timber.tag(TAG).w("animate close")
         }
     }
 
@@ -314,10 +305,9 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
                 override fun onAnimationStart(animation: Animator?) {
                 }
             })
-
             animator.start()
         } else {
-            Log.w(TAG, "animate close")
+            Timber.tag(TAG).w("animate close")
         }
     }
 
