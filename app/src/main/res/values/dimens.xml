@@ -2,8 +2,10 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="title_text">22sp</dimen>
+    <dimen name="big_size">32sp</dimen>
     <dimen name="sub_title_text">20sp</dimen>
     <dimen name="normal_text">18sp</dimen>
+    <dimen name="sub_text">16sp</dimen>
     <dimen name="item_text">18sp</dimen>
     <dimen name="sub_item_text">13sp</dimen>
 

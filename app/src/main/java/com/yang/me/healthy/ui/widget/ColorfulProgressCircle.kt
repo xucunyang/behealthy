@@ -73,6 +73,8 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
 
     private val shadowPaint = Paint()
 
+    private val bgCirclePaint = Paint()
+
     init {
         val typedArray =
             context.obtainStyledAttributes(attrs, R.styleable.ColorfulProgressCircle)
@@ -120,6 +122,9 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
 
         startEndCirclePaint.style = Paint.Style.FILL
 
+        bgCirclePaint.style = Paint.Style.STROKE
+        bgCirclePaint.setColor(resources.getColor(R.color.white_10))
+
         shadowColorArray = intArrayOf(
             resources.getColor(R.color.black_50),
             resources.getColor(R.color.black_25),
@@ -133,6 +138,7 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
         arcWidth = (viewSize * ARC_WIDTH_SCALE).toFloat()
         circleSpace = viewSize * CIRCLE_SPACE_SCALE.toFloat()
         mPaint.strokeWidth = arcWidth
+        bgCirclePaint.strokeWidth = arcWidth
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -169,6 +175,8 @@ class ColorfulProgressCircle(context: Context, attrs: AttributeSet) : View(conte
         mPaint.shader = sweepGradient
 
         circleRect.set(offset, offset, viewSize - offset, viewSize - offset)
+        // bg
+        canvas?.drawArc(circleRect, 0f, 360f, false, bgCirclePaint)
 
         // draw arc
         if (destDegree <= 360) {

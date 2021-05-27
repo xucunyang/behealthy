@@ -15,8 +15,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="white_50">#80FFFFFF</color>
     <color name="white_20">#33FFFFFF</color>
+    <color name="white_10">#0DFFFFFF</color>
     <color name="yell">#D86666</color>
     <color name="red">#ad1805</color>
+    <color name="bg_circle">#220001</color>
 
     <color name="out_circle_start">#ec1f22</color>
     <color name="out_circle_end">#f0345e</color>

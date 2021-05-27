@@ -1,23 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_button_border_r_4"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="20dp">
+
+        <ImageView
+            android:id="@+id/success"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:src="@mipmap/ic_success"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/text"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="喝水：8杯"
-            android:textColor="@color/white"
-            android:textSize="@dimen/normal_text" />
+            android:text="喝水"
+            android:textColor="@color/yell"
+            android:textSize="@dimen/title_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:text="3"
+            android:textColor="@color/inner_circle_end"
+            android:textSize="@dimen/big_size"
+            app:layout_constraintEnd_toStartOf="@+id/divider"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title" />
+
+        <TextView
+            android:id="@+id/divider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="/"
+            android:textColor="@color/inner_circle_end"
+            android:textSize="@dimen/big_size"
+            app:layout_constraintEnd_toStartOf="@id/target"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/current"
+            app:layout_constraintTop_toTopOf="@id/current" />
+
+        <TextView
+            android:id="@+id/target"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="8"
+            android:textColor="@color/inner_circle_end"
+            android:textSize="@dimen/big_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/divider"
+            app:layout_constraintTop_toTopOf="@id/divider" />
+
+
+        <TextView
+            android:id="@+id/unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="（15分钟）"
+            android:textColor="@color/inner_circle_end"
+            android:textSize="@dimen/sub_item_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/target" />
 
         <ImageView
             android:id="@+id/add"
@@ -25,10 +96,13 @@
             android:layout_height="35dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:layout_marginBottom="20dp"
             android:scaleType="centerCrop"
-            android:src="@mipmap/ic_item_add" />
+            android:src="@mipmap/ic_item_add"
+            android:tint="@color/red"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/unit" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
