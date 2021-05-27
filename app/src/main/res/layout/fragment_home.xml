@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black"
+        android:orientation="vertical"
         tools:context=".ui.fragment.HomeFragment">
 
         <include
@@ -19,49 +20,55 @@
             android:background="@color/white_20"
             app:layout_constraintTop_toBottomOf="@id/include_action_bar" />
 
-        <TextView
-            android:id="@+id/week"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:textColor="@color/white_50"
-            android:textSize="@dimen/sub_item_text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/include_action_bar" />
-
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:textColor="@color/white_50"
-            android:textSize="@dimen/item_text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/week" />
-
-        <com.yang.me.healthy.ui.widget.ColorfulProgressCircle
-            android:id="@+id/colorful_progress"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="40dp"
-            app:animate="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/date" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv"
+        <ScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:overScrollMode="never"
-            app:layout_constraintTop_toBottomOf="@id/colorful_progress" />
+            android:layout_height="match_parent">
 
+            <LinearLayout
+                android:id="@+id/body"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/include_action_bar">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/week"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:textColor="@color/white_50"
+                    android:textSize="@dimen/sub_item_text" />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:textColor="@color/white_50"
+                    android:textSize="@dimen/item_text" />
+
+                <com.yang.me.healthy.ui.widget.ColorfulProgressCircle
+                    android:id="@+id/colorful_progress"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="40dp"
+                    app:animate="true" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:overScrollMode="never" />
+            </LinearLayout>
+
+        </ScrollView>
+    </LinearLayout>
 
 </layout>

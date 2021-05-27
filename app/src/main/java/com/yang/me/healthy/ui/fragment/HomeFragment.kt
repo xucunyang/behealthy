@@ -16,6 +16,7 @@ import com.yang.me.lib.VhItemSizeHelper
 import com.yang.me.lib.adapter.BaseWrapAdapter
 import com.yang.me.lib.extension.launchWrapped
 import com.yang.me.lib.util.Util
+import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
 import java.util.*
 
 
@@ -59,6 +60,10 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
         mViewBinding.date.text = Util.getSimpleDateFormat(System.currentTimeMillis(), "yyyy-MM-dd")
         mViewBinding.week.text = Util.getWeek(Date(System.currentTimeMillis()))
 
+        // Horizontal
+        OverScrollDecoratorHelper.setUpStaticOverScroll(mViewBinding.rv, OverScrollDecoratorHelper.ORIENTATION_HORIZONTAL);
+        // Vertical
+        OverScrollDecoratorHelper.setUpOverScroll(mViewBinding.scrollView);
         updateCircleProgress()
         initAddRv()
 
@@ -144,20 +149,20 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
                                         if (list[index].id == bean.id) {
                                             if (index == 0) {
                                                 outTempProgress =
-                                                    360f * 1 / list[index].targetProgress
+                                                        360f * 1 / list[index].targetProgress
                                             } else if (index == 1) {
                                                 midTempProgress =
-                                                    360f * 1 / list[index].targetProgress
+                                                        360f * 1 / list[index].targetProgress
                                             } else if (index == 2) {
                                                 innerTempProgress =
-                                                    360f * 1 / list[index].targetProgress
+                                                        360f * 1 / list[index].targetProgress
                                             }
                                         }
                                     }
                                     mViewBinding.colorfulProgress.increaseWithAnim(
-                                        outTempProgress,
-                                        midTempProgress,
-                                        innerTempProgress
+                                            outTempProgress,
+                                            midTempProgress,
+                                            innerTempProgress
                                     )
 
                                     initAddRv()
