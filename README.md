@@ -11,4 +11,4 @@
 + 目前支持三个进度
 
 预览
-![圆环](https://upload-images.jianshu.io/upload_images/14111000-c0a01b33f0124810.gif?imageMogr2/auto-orient/strip|imageView2/2/w/432/format/webp)
+![圆环](https://github.com/oranle/behealthy/blob/main/screnncapure/f621579d9250a3aebe509cd2533c7985.mp4_20210527_150130.gif)
