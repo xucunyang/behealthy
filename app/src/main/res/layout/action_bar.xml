@@ -6,28 +6,34 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/primary_color"
         app:contentInsetEnd="0dp"
-        app:contentInsetStart="0dp"
-        app:navigationIcon="@mipmap/ic_back_white">
+        app:contentInsetStart="0dp">
 
-        <TextView
-            android:id="@+id/title_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="概览"
-            android:textColor="@color/white"
-            android:textSize="22sp" />
+        <com.wonderkiln.blurkit.BlurLayout
+            android:id="@+id/blur_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/menu_end"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="15dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_add" />
+            <TextView
+                android:id="@+id/title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="概览"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <ImageView
+                android:id="@+id/menu_end"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="15dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_add" />
+
+        </com.wonderkiln.blurkit.BlurLayout>
 
     </androidx.appcompat.widget.Toolbar>
 

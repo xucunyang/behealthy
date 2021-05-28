@@ -2,6 +2,7 @@ package com.yang.me.healthy
 
 import android.app.Application
 import android.content.Context
+import com.wonderkiln.blurkit.BlurKit
 import timber.log.Timber
 
 class App : Application() {
@@ -21,6 +22,7 @@ class App : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+        BlurKit.init(this)
     }
 
 }

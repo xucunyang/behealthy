@@ -37,9 +37,20 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
     private lateinit var baseWrapAdapter: BaseWrapAdapter<ItemEventVH, TypedEvent>
 
     override fun getFragmentLayoutId() =
-            R.layout.fragment_home
+        R.layout.fragment_home
 
     override fun init() {
+        // blur top view
+        setImmersiveBlurView(
+            mViewBinding.includeActionBar.toolbar,
+            mViewBinding.includeActionBar.blurLayout,
+            false
+        )
+        // black navigation bar
+        Util.setNavigationBarColor(activity, R.color.black)
+
+        mViewBinding.includeActionBar.blurLayout.setBlurRadius(15)
+
         context?.apply {
             eventTypedDialog = EventTypeDialog(this)
             eventTypedDialog.setOnDismissListener { dialog ->
@@ -47,9 +58,6 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
                 updateCircleProgress()
             }
         }
-
-        setStatusBarColor(R.color.black)
-        Util.setNavigationBarColor(activity, R.color.black)
 
         typedEventDao = AppDataBase.get().getTypedEventDao()
         eventDetailDao = AppDataBase.get().getEventDetailDao()
@@ -61,7 +69,10 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
         mViewBinding.week.text = Util.getWeek(Date(System.currentTimeMillis()))
 
         // Horizontal
-        OverScrollDecoratorHelper.setUpStaticOverScroll(mViewBinding.rv, OverScrollDecoratorHelper.ORIENTATION_HORIZONTAL);
+        OverScrollDecoratorHelper.setUpStaticOverScroll(
+            mViewBinding.rv,
+            OverScrollDecoratorHelper.ORIENTATION_HORIZONTAL
+        );
         // Vertical
         OverScrollDecoratorHelper.setUpOverScroll(mViewBinding.scrollView);
         updateCircleProgress()
@@ -84,18 +95,18 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
                 if (it.isNotEmpty()) {
                     val outEvent = it[0]
                     mViewBinding.colorfulProgress.outDestDegree =
-                            360f * (outEvent.totalProgress.toFloat() / outEvent.targetProgress)
+                        360f * (outEvent.totalProgress.toFloat() / outEvent.targetProgress)
 
                     if (it.size > 1) {
                         val midEvent = it[1]
                         mViewBinding.colorfulProgress.midDestDegree =
-                                360f * (midEvent.totalProgress.toFloat() / midEvent.targetProgress)
+                            360f * (midEvent.totalProgress.toFloat() / midEvent.targetProgress)
                     }
 
                     if (it.size > 2) {
                         val innerEvent = it[2]
                         mViewBinding.colorfulProgress.innerDestDegree =
-                                360f * (innerEvent.totalProgress.toFloat() / innerEvent.targetProgress)
+                            360f * (innerEvent.totalProgress.toFloat() / innerEvent.targetProgress)
                     }
                 }
                 mViewBinding.colorfulProgress.startAnimateProgress()
@@ -110,7 +121,7 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
         val allTypedEvent = typedEventDao.getAllTypedEvent()
         for (typedEvent in allTypedEvent) {
             typedEvent.totalProgress =
-                    getTotalCount(eventDetailDao.getTodayDetailTotalByType(typedEvent.id))
+                getTotalCount(eventDetailDao.getTodayDetailTotalByType(typedEvent.id))
         }
         return allTypedEvent
     }
@@ -125,22 +136,22 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
 
     private fun initAddRv() {
         launchWrapped(
-                lifecycleOwner = this,
-                asyncBlock = {
-                    getAllTypedEventData()
-                },
-                uiBlock = { it ->
-                    if (it.isNotEmpty()) {
-                        baseWrapAdapter = BaseWrapAdapter<ItemEventVH, TypedEvent>(it,
-                                BaseWrapAdapter.VhProvider<ItemEventVH> { parent, _ ->
-                                    ItemEventVH(parent)
-                                })
-                        baseWrapAdapter.setClickListener { view, position, bean ->
-                            launchWrapped(HomeFragment@ this,
-                                    {
-                                        eventDetailDao.insert(EventDetail(bean.id, 1))
-                                        typedEventDao.getAllTypedEvent()
-                                    }, { list ->
+            lifecycleOwner = this,
+            asyncBlock = {
+                getAllTypedEventData()
+            },
+            uiBlock = { it ->
+                if (it.isNotEmpty()) {
+                    baseWrapAdapter = BaseWrapAdapter<ItemEventVH, TypedEvent>(it,
+                        BaseWrapAdapter.VhProvider<ItemEventVH> { parent, _ ->
+                            ItemEventVH(parent)
+                        })
+                    baseWrapAdapter.setClickListener { view, position, bean ->
+                        launchWrapped(HomeFragment@ this,
+                            {
+                                eventDetailDao.insert(EventDetail(bean.id, 1))
+                                typedEventDao.getAllTypedEvent()
+                            }, { list ->
                                 if (list.isNotEmpty()) {
                                     var outTempProgress: Float = 0f
                                     var midTempProgress: Float = 0f
@@ -149,35 +160,40 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
                                         if (list[index].id == bean.id) {
                                             if (index == 0) {
                                                 outTempProgress =
-                                                        360f * 1 / list[index].targetProgress
+                                                    360f * 1 / list[index].targetProgress
                                             } else if (index == 1) {
                                                 midTempProgress =
-                                                        360f * 1 / list[index].targetProgress
+                                                    360f * 1 / list[index].targetProgress
                                             } else if (index == 2) {
                                                 innerTempProgress =
-                                                        360f * 1 / list[index].targetProgress
+                                                    360f * 1 / list[index].targetProgress
                                             }
                                         }
                                     }
                                     mViewBinding.colorfulProgress.increaseWithAnim(
-                                            outTempProgress,
-                                            midTempProgress,
-                                            innerTempProgress
+                                        outTempProgress,
+                                        midTempProgress,
+                                        innerTempProgress
                                     )
 
                                     initAddRv()
                                 }
                             }
-                            )
-                        }
-                        mViewBinding.rv.adapter = baseWrapAdapter
-                        if (mViewBinding.rv.itemDecorationCount == 0) {
-                            val vhItemSizeHelper = VhItemSizeHelper(context, it.size, 10, 10)
-                            mViewBinding.rv.addItemDecoration(CustomItemDecoration(context, vhItemSizeHelper))
-                        }
-                        mViewBinding.rv.layoutManager = GridLayoutManager(requireContext(), it.size)
+                        )
                     }
+                    mViewBinding.rv.adapter = baseWrapAdapter
+                    if (mViewBinding.rv.itemDecorationCount == 0) {
+                        val vhItemSizeHelper = VhItemSizeHelper(context, it.size, 10, 10)
+                        mViewBinding.rv.addItemDecoration(
+                            CustomItemDecoration(
+                                context,
+                                vhItemSizeHelper
+                            )
+                        )
+                    }
+                    mViewBinding.rv.layoutManager = GridLayoutManager(requireContext(), it.size)
                 }
+            }
         )
     }
 

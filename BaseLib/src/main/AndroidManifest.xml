@@ -2,4 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.yang.me.lib">
 
+    <application>
+        <activity android:name=".BaseBindActivity" />
+        <activity android:name=".FragmentDisplayActivity" />
+    </application>
 </manifest>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -78,6 +79,21 @@ public abstract class BaseBindFragment<ViewBinding extends ViewDataBinding>
 
     @Override
     public void onClick(View v) {
+    }
+
+    /**
+     * 沉浸状态栏
+     *
+     * @param toolbar                 toolbar
+     * @param blurView                blurView
+     * @param statusBarBlackFontColor 状态栏字体颜色
+     */
+    protected void setImmersiveBlurView(View toolbar, View blurView, boolean statusBarBlackFontColor) {
+        Util.setViewLayoutParams(toolbar, LinearLayout.LayoutParams.MATCH_PARENT, Util.getTopBarHeight(getContext()));
+
+        blurView.setPadding(0, Util.getStatusBarHeight(getResources()), 0, 0);
+
+        Util.setAndroidNativeLightStatusBar(getActivity(), statusBarBlackFontColor);
     }
 
     protected abstract int getFragmentLayoutId();

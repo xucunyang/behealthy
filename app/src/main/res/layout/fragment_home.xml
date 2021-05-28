@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black"
-        android:orientation="vertical"
-        tools:context=".ui.fragment.HomeFragment">
-
-        <include
-            android:id="@+id/include_action_bar"
-            layout="@layout/action_bar" />
+        android:orientation="vertical">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/white_20"
-            app:layout_constraintTop_toBottomOf="@id/include_action_bar" />
+            android:layout_below="@+id/include_action_bar"
+            android:background="@color/white_20" />
 
         <ScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_below="@id/include_action_bar"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <LinearLayout
                 android:id="@+id/body"
@@ -69,6 +65,11 @@
             </LinearLayout>
 
         </ScrollView>
-    </LinearLayout>
+
+        <include
+            android:id="@+id/include_action_bar"
+            layout="@layout/action_bar" />
+
+    </RelativeLayout>
 
 </layout>
