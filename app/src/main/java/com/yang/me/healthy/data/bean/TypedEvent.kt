@@ -42,4 +42,6 @@ data class TypedEvent(
     var id: Long = 0
 
     var totalProgress: Int = 0
+
+    var showDelete = false
 }

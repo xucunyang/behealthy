@@ -25,6 +25,8 @@ public abstract class BaseAutoBindVHAdapter<VH extends BaseViewHolder<T>, T exte
 
     private OnItemClickListener<T> mClickListener;
 
+    private OnItemClickListener<T> mOnLongClickListener;
+
     public BaseAutoBindVHAdapter(List<T> data) {
         this.data.addAll(data);
     }
@@ -39,6 +41,17 @@ public abstract class BaseAutoBindVHAdapter<VH extends BaseViewHolder<T>, T exte
                 @Override
                 public void onClick(View v) {
                     mClickListener.onItemClick(v, position, (T) itemBean);
+                }
+            });
+        }
+
+        // long click
+        if (mOnLongClickListener != null) {
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    mOnLongClickListener.onItemClick(view, position, (T) itemBean);
+                    return false;
                 }
             });
         }
@@ -62,6 +75,10 @@ public abstract class BaseAutoBindVHAdapter<VH extends BaseViewHolder<T>, T exte
 
     public void setClickListener(OnItemClickListener<T> listener) {
         this.mClickListener = listener;
+    }
+
+    public void setOnLongClickListener(OnItemClickListener<T> mOnLongClickListener) {
+        this.mOnLongClickListener = mOnLongClickListener;
     }
 
     public void updateData(List<T> list) {

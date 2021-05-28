@@ -23,6 +23,9 @@ interface EventDetailDao {
         end: Long = TimeUtil.getEndOfDay(System.currentTimeMillis())
     ): List<EventDetail>
 
+    @Query("DELETE FROM EventDetail WHERE eventId=:eventId")
+    fun deleteDetailByEventId(eventId: Long)
+
     @Insert
     fun insert(event: EventDetail)
 

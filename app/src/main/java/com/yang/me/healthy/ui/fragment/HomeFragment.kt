@@ -1,5 +1,6 @@
 package com.yang.me.healthy.ui.fragment
 
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import com.yang.me.healthy.R
@@ -74,9 +75,21 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
             OverScrollDecoratorHelper.ORIENTATION_HORIZONTAL
         );
         // Vertical
-        OverScrollDecoratorHelper.setUpOverScroll(mViewBinding.scrollView);
+        OverScrollDecoratorHelper.setUpOverScroll(mViewBinding.scrollView)
+
         updateCircleProgress()
         initAddRv()
+
+        mViewBinding.body.setOnClickListener {
+            Log.d(TAG, "on touch $operateRvInEditMode")
+            if (operateRvInEditMode) {
+                for (datum in baseWrapAdapter.data) {
+                    datum.showDelete = false
+                }
+                baseWrapAdapter.notifyDataSetChanged()
+            }
+            operateRvInEditMode = false
+        }
 
         launchWrapped(this, {
             typedEventDao.getAllTypedEvent().isEmpty()
@@ -101,13 +114,22 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
                         val midEvent = it[1]
                         mViewBinding.colorfulProgress.midDestDegree =
                             360f * (midEvent.totalProgress.toFloat() / midEvent.targetProgress)
+                    } else {
+                        mViewBinding.colorfulProgress.midDestDegree = 0f
+                        mViewBinding.colorfulProgress.innerDestDegree = 0f
                     }
 
                     if (it.size > 2) {
                         val innerEvent = it[2]
                         mViewBinding.colorfulProgress.innerDestDegree =
                             360f * (innerEvent.totalProgress.toFloat() / innerEvent.targetProgress)
+                    } else {
+                        mViewBinding.colorfulProgress.innerDestDegree = 0f
                     }
+                } else {
+                    mViewBinding.colorfulProgress.outDestDegree = 0f
+                    mViewBinding.colorfulProgress.midDestDegree = 0f
+                    mViewBinding.colorfulProgress.innerDestDegree = 0f
                 }
                 mViewBinding.colorfulProgress.startAnimateProgress()
             }
@@ -138,50 +160,13 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
         launchWrapped(
             lifecycleOwner = this,
             asyncBlock = {
-                getAllTypedEventData()
+                typedEventData.clear()
+                typedEventData.addAll(getAllTypedEventData())
+                typedEventData
             },
             uiBlock = { it ->
                 if (it.isNotEmpty()) {
-                    baseWrapAdapter = BaseWrapAdapter<ItemEventVH, TypedEvent>(it,
-                        BaseWrapAdapter.VhProvider<ItemEventVH> { parent, _ ->
-                            ItemEventVH(parent)
-                        })
-                    baseWrapAdapter.setClickListener { view, position, bean ->
-                        launchWrapped(HomeFragment@ this,
-                            {
-                                eventDetailDao.insert(EventDetail(bean.id, 1))
-                                typedEventDao.getAllTypedEvent()
-                            }, { list ->
-                                if (list.isNotEmpty()) {
-                                    var outTempProgress: Float = 0f
-                                    var midTempProgress: Float = 0f
-                                    var innerTempProgress: Float = 0f
-                                    for (index in it.indices) {
-                                        if (list[index].id == bean.id) {
-                                            if (index == 0) {
-                                                outTempProgress =
-                                                    360f * 1 / list[index].targetProgress
-                                            } else if (index == 1) {
-                                                midTempProgress =
-                                                    360f * 1 / list[index].targetProgress
-                                            } else if (index == 2) {
-                                                innerTempProgress =
-                                                    360f * 1 / list[index].targetProgress
-                                            }
-                                        }
-                                    }
-                                    mViewBinding.colorfulProgress.increaseWithAnim(
-                                        outTempProgress,
-                                        midTempProgress,
-                                        innerTempProgress
-                                    )
-
-                                    initAddRv()
-                                }
-                            }
-                        )
-                    }
-                    mViewBinding.rv.adapter = baseWrapAdapter
+                    mViewBinding.rv.adapter = getOperateRvAdapter()
                     if (mViewBinding.rv.itemDecorationCount == 0) {
                         val vhItemSizeHelper = VhItemSizeHelper(context, it.size, 10, 10)
                         mViewBinding.rv.addItemDecoration(
@@ -192,16 +177,78 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
                         )
                     }
                     mViewBinding.rv.layoutManager = GridLayoutManager(requireContext(), it.size)
+                    mViewBinding.rv.visibility = View.VISIBLE
+                } else {
+                    mViewBinding.rv.visibility = View.GONE
                 }
             }
         )
     }
+
+    val typedEventData = mutableListOf<TypedEvent>()
+
+    var operateRvInEditMode = false
 
     override fun onClick(v: View?) {
         super.onClick(v)
         if (v == mViewBinding.includeActionBar.menuEnd) {
             eventTypedDialog.show()
         }
+    }
+
+    private fun getOperateRvAdapter(): BaseWrapAdapter<ItemEventVH, TypedEvent> {
+        baseWrapAdapter = BaseWrapAdapter<ItemEventVH, TypedEvent>(typedEventData,
+            BaseWrapAdapter.VhProvider<ItemEventVH> { parent, _ ->
+                val itemEventVH = ItemEventVH(parent)
+                itemEventVH.setOnDeleteListener { v, _, b ->
+                    typedEventDao.deleteById(b.id)
+                    eventDetailDao.deleteDetailByEventId(b.id)
+                    initAddRv()
+                    updateCircleProgress()
+                }
+                itemEventVH
+            })
+        baseWrapAdapter.setClickListener { view, position, bean ->
+            launchWrapped(HomeFragment@ this,
+                {
+                    eventDetailDao.insert(EventDetail(bean.id, 1))
+                    typedEventDao.getAllTypedEvent()
+                }, { list ->
+                    if (list.isNotEmpty()) {
+                        var outTempProgress = 0f;
+                        var midTempProgress = 0f;
+                        var innerTempProgress = 0f
+                        for (index in list.indices) {
+                            if (list[index].id == bean.id) {
+                                if (index == 0) {
+                                    outTempProgress = 360f / list[index].targetProgress
+                                } else if (index == 1) {
+                                    midTempProgress = 360f / list[index].targetProgress
+                                } else if (index == 2) {
+                                    innerTempProgress =
+                                        360f / list[index].targetProgress
+                                }
+                            }
+                        }
+                        mViewBinding.colorfulProgress.increaseWithAnim(
+                            outTempProgress,
+                            midTempProgress,
+                            innerTempProgress
+                        )
+
+                        initAddRv()
+                    }
+                }
+            )
+        }
+        baseWrapAdapter.setOnLongClickListener { _, _, _ ->
+            operateRvInEditMode = true
+            baseWrapAdapter.data.forEach {
+                it.showDelete = true
+            }
+            baseWrapAdapter.notifyDataSetChanged()
+        }
+        return baseWrapAdapter
     }
 
 }
