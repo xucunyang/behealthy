@@ -1,7 +1,7 @@
 package com.yang.me.healthy.ui.fragment
 
-import android.util.Log
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.GridLayoutManager
 import com.yang.me.healthy.R
 import com.yang.me.healthy.data.AppDataBase
@@ -10,6 +10,7 @@ import com.yang.me.healthy.data.bean.TypedEvent
 import com.yang.me.healthy.data.dao.EventDetailDao
 import com.yang.me.healthy.data.dao.TypedEventDao
 import com.yang.me.healthy.databinding.FragmentHomeBinding
+import com.yang.me.healthy.ui.dialog.ConfirmDialog
 import com.yang.me.healthy.ui.dialog.EventTypeDialog
 import com.yang.me.lib.BaseBindFragment
 import com.yang.me.lib.CustomItemDecoration
@@ -36,6 +37,14 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
     private lateinit var eventDetailDao: EventDetailDao
     private lateinit var eventTypedDialog: EventTypeDialog
     private lateinit var baseWrapAdapter: BaseWrapAdapter<ItemEventVH, TypedEvent>
+    var onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (operateRvInEditMode) {
+                finishEditMode()
+                remove()
+            }
+        }
+    }
 
     override fun getFragmentLayoutId() =
         R.layout.fragment_home
@@ -69,6 +78,11 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
         mViewBinding.date.text = Util.getSimpleDateFormat(System.currentTimeMillis(), "yyyy-MM-dd")
         mViewBinding.week.text = Util.getWeek(Date(System.currentTimeMillis()))
 
+        mViewBinding.includeActionBar.menuText.setOnClickListener {
+            onBackPressedCallback.remove()
+            finishEditMode()
+        }
+
         // Horizontal
         OverScrollDecoratorHelper.setUpStaticOverScroll(
             mViewBinding.rv,
@@ -80,17 +94,7 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
         updateCircleProgress()
         initAddRv()
 
-        mViewBinding.body.setOnClickListener {
-            Log.d(TAG, "on touch $operateRvInEditMode")
-            if (operateRvInEditMode) {
-                for (datum in baseWrapAdapter.data) {
-                    datum.showDelete = false
-                }
-                baseWrapAdapter.notifyDataSetChanged()
-            }
-            operateRvInEditMode = false
-        }
-
+        // load
         launchWrapped(this, {
             typedEventDao.getAllTypedEvent().isEmpty()
         }, {
@@ -201,10 +205,17 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
             BaseWrapAdapter.VhProvider<ItemEventVH> { parent, _ ->
                 val itemEventVH = ItemEventVH(parent)
                 itemEventVH.setOnDeleteListener { v, _, b ->
-                    typedEventDao.deleteById(b.id)
-                    eventDetailDao.deleteDetailByEventId(b.id)
-                    initAddRv()
-                    updateCircleProgress()
+                    context?.apply {
+                        val dialog = ConfirmDialog(this)
+                        dialog.onDone = {
+                            typedEventDao.deleteById(b.id)
+                            eventDetailDao.deleteDetailByEventId(b.id)
+                            initAddRv()
+                            updateCircleProgress()
+                        }
+                        dialog.show()
+                    }
+
                 }
                 itemEventVH
             })
@@ -215,8 +226,8 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
                     typedEventDao.getAllTypedEvent()
                 }, { list ->
                     if (list.isNotEmpty()) {
-                        var outTempProgress = 0f;
-                        var midTempProgress = 0f;
+                        var outTempProgress = 0f
+                        var midTempProgress = 0f
                         var innerTempProgress = 0f
                         for (index in list.indices) {
                             if (list[index].id == bean.id) {
@@ -247,8 +258,38 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
                 it.showDelete = true
             }
             baseWrapAdapter.notifyDataSetChanged()
+
+            addBackCallback()
+
+            setToolbarEndMenu(false)
         }
         return baseWrapAdapter
+    }
+
+    private fun addBackCallback() {
+        activity?.onBackPressedDispatcher?.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        );
+    }
+
+    private fun setToolbarEndMenu(showAddMenu: Boolean) {
+        mViewBinding.includeActionBar.menuEnd.visibility =
+            if (showAddMenu) View.VISIBLE else View.GONE
+        mViewBinding.includeActionBar.menuText.visibility =
+            if (showAddMenu) View.GONE else View.VISIBLE
+    }
+
+    private fun finishEditMode() {
+        if (operateRvInEditMode) {
+            for (datum in baseWrapAdapter.data) {
+                datum.showDelete = false
+            }
+            baseWrapAdapter.notifyDataSetChanged()
+
+            setToolbarEndMenu(true)
+        }
+        operateRvInEditMode = false
     }
 
 }

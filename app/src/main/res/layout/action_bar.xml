@@ -33,6 +33,20 @@
                 android:scaleType="centerCrop"
                 android:src="@mipmap/ic_add" />
 
+            <TextView
+                android:id="@+id/menu_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:paddingStart="15dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="15dp"
+                android:visibility="gone"
+                android:paddingBottom="10dp"
+                android:text="取消"
+                android:textColor="@color/red"
+                android:textSize="22sp" />
+
         </com.wonderkiln.blurkit.BlurLayout>
 
     </androidx.appcompat.widget.Toolbar>
