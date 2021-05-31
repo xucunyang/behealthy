@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import com.yang.me.healthy.R;
 import com.yang.me.healthy.data.bean.TypedEvent;
 import com.yang.me.healthy.databinding.ItemEventAddBinding;
+import com.yang.me.healthy.ui.dialog.EventTypeDialog;
 import com.yang.me.lib.adapter.OnItemClickListener;
 import com.yang.me.lib.vh.BaseAutoBindVH;
 
@@ -25,12 +26,21 @@ public class ItemEventVH extends BaseAutoBindVH<ItemEventAddBinding, TypedEvent>
         setText(mViewBinding.unit, "(" + bean.getUnit() + ")");
 
         mViewBinding.itemDelete.setVisibility(bean.getShowDelete() ? View.VISIBLE : View.GONE);
+        mViewBinding.edit.setVisibility(bean.getShowDelete() ? View.VISIBLE : View.GONE);
         if (mOnDeleteListener != null) {
             mViewBinding.itemDelete.setOnClickListener(v -> {
                         mOnDeleteListener.onItemClick(v, position, bean);
                     }
             );
         }
+
+        mViewBinding.edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EventTypeDialog dialog = new EventTypeDialog(view.getContext(), true, bean);
+                dialog.show();
+            }
+        });
     }
 
     private OnItemClickListener<TypedEvent> mOnDeleteListener;

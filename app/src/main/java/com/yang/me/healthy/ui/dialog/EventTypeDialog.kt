@@ -14,7 +14,12 @@ import com.yang.me.lib.BaseDialog
 import com.yang.me.lib.extension.launchWrapped
 import com.yang.me.lib.extension.toast
 
-class EventTypeDialog(context: Context) : BaseDialog<DialogEventTypeBinding>(context), View.OnClickListener {
+class EventTypeDialog(
+    context: Context,
+    val editMode: Boolean = false,
+    val typedEvent: TypedEvent? = null
+) :
+    BaseDialog<DialogEventTypeBinding>(context), View.OnClickListener {
 
     override fun getLayoutId() = R.layout.dialog_event_type
 
@@ -22,6 +27,18 @@ class EventTypeDialog(context: Context) : BaseDialog<DialogEventTypeBinding>(con
         super.initView()
         mViewBinding.close.setOnClickListener(this)
         mViewBinding.done.setOnClickListener(this)
+
+        if (editMode) {
+            typedEvent?.apply {
+                mViewBinding.editTypeName.setText(typedEvent.eventName)
+                mViewBinding.editUnit.setText(typedEvent.unit)
+                mViewBinding.editTarget.setText(typedEvent.targetProgress.toString())
+            }
+            mViewBinding.done.setText("修改")
+        } else {
+            mViewBinding.done.setText("添加")
+        }
+
     }
 
     override fun onStart() {
@@ -67,18 +84,41 @@ class EventTypeDialog(context: Context) : BaseDialog<DialogEventTypeBinding>(con
         launchWrapped(
             asyncBlock = {
                 val typedEventDao = AppDataBase.get().getTypedEventDao()
-                val isExist = typedEventDao.getAllTypedEventByName(typedName).isNotEmpty()
-                if (!isExist) {
-                    typedEventDao.insert(TypedEvent(typedName,true, System.currentTimeMillis(), target.toInt(), unit))
+                if (editMode) {
+                    typedEvent?.apply {
+                        this.eventName = typedName
+                        this.targetProgress = target.toInt()
+                        this.unit = unit
+                        typedEventDao.update(typedEvent)
+                    }
+                    true
+                } else {
+                    val isExist = typedEventDao.getAllTypedEventByName(typedName).isNotEmpty()
+                    if (!isExist) {
+                        typedEventDao.insert(
+                            TypedEvent(
+                                typedName,
+                                true,
+                                System.currentTimeMillis(),
+                                target.toInt(),
+                                unit
+                            )
+                        )
+                    }
+                    isExist
                 }
-                isExist
             },
             uiBlock = {
-                if (it) {
-                    toast(requireContext(), "项目名已存在，重新新添加新项目")
-                } else {
-                    toast(requireContext(), "已添加")
+                if (editMode) {
+                    toast(requireContext(), "已修改")
                     dismiss()
+                } else {
+                    if (it) {
+                        toast(requireContext(), "项目名已存在，重新新添加新项目")
+                    } else {
+                        toast(requireContext(), "已添加")
+                        dismiss()
+                    }
                 }
             })
     }
