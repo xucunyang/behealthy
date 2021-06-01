@@ -1,6 +1,7 @@
 package com.yang.me.healthy.data.bean
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.yang.me.lib.bean.BaseBean
 
@@ -41,7 +42,9 @@ data class TypedEvent(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 
+    @Ignore
     var totalProgress: Int = 0
 
+    @Ignore
     var showDelete = false
 }
