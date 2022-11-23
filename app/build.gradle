@@ -48,6 +48,8 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
 
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5'
+
     // room
     implementation "androidx.room:room-runtime:2.3.0"
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
