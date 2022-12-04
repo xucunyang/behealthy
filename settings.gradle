@@ -1,3 +1,4 @@
+include ':myapplication'
 include ':lib'
 include ':BaseLib'
 include ':app'
