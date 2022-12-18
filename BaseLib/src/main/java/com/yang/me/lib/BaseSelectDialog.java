@@ -46,6 +46,7 @@ public class BaseSelectDialog extends DialogFragment implements OnClickListener 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_base_select, container, false);
         mRootView = binding.getRoot();
+        initView();
         return mRootView;
     }
 

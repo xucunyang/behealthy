@@ -27,10 +27,9 @@ class App : Application() {
         BlurKit.init(this)
 
         //因调试设备非正常手机（出现泄漏屏幕中间会出现小鸟），所以无法使用notification或者leaks入口查看泄漏日志，所以采用保存本地的方法
-        LeakCanary.refWatcher(this).listenerServiceClass(
-            LeakService.class)
-                .excludedRefs(AndroidExcludedRefs.createAppDefaults().build())
-                .buildAndInstall()
+//        LeakCanary.refWatcher(this).listenerServiceClass(
+//            LeakService.class)
+//                .excludedRefs(AndroidExcludedRefs.createAppDefaults().build())
     }
 
 }

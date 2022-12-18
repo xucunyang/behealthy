@@ -1,22 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black"
-    tools:context=".MainActivity">
+<layout>
 
-   <com.yang.myapplication.MyLinearLayout
-       android:layout_width="300dp"
-       android:layout_height="300dp"
-       android:background="@color/white">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/teal_200"
+        tools:context=".MainActivity">
 
-       <com.yang.myapplication.MyButton
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="BUTTON"/>
+        <com.yang.myapplication.MyLinearLayout
+            android:id="@+id/linerlayout"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:background="@color/white"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-   </com.yang.myapplication.MyLinearLayout>
+            <com.yang.myapplication.MyButton
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:text="BUTTON" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <com.yang.myapplication.MyButton
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BUTTON2" />
+
+        </com.yang.myapplication.MyLinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

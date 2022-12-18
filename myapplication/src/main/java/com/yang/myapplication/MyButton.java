@@ -16,8 +16,7 @@ public class MyButton extends Button {
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         Log.i(TAG, "dispatchTouchEvent: " + event.getAction());
-//        return super.dispatchTouchEvent(event);
-        return true;
+        return super.dispatchTouchEvent(event);
     }
 
     @Override

@@ -20,4 +20,6 @@
     <color name="inner_circle_start">#48b9e0</color>
     <color name="inner_circle_end">#5eecd4</color>
     <color name="inner_much_circle_end">#5ffccf</color>
+
+    <color name="transparent">#00000000</color>
 </resources>
