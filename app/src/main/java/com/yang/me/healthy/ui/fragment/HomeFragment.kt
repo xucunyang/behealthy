@@ -196,7 +196,8 @@ class HomeFragment : BaseBindFragment<FragmentHomeBinding>() {
     override fun onClick(v: View?) {
         super.onClick(v)
         if (v == mViewBinding.includeActionBar.menuEnd) {
-            eventTypedDialog.show()
+//            eventTypedDialog.show()
+            activity?.let { ThirdActivity.start(it, "xcy~~~") }
         }
     }
 
