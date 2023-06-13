@@ -37,7 +37,10 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     protected void init() {
         mViewBinding.button.setOnClickListener(v -> {
             Log.i(TAG, "button: ");
-            startActivity(new Intent(MainActivity.this, SecActivity.class));
+            Log.i(TAG, "init: ssss start");
+//            startActivity(new Intent(MainActivity.this, SecActivity.class));
+            boolean httpUrl = Util.isHttpUrl(Util.PROD_URL); // 原因找到了！！！
+            Log.i(TAG, "init: " + httpUrl);
         });
 //        mViewBinding.linerlayout.setOnClickListener(v -> {
 //            Log.i(TAG, "linerlayout: ");
@@ -46,10 +49,14 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         mViewBinding.button2.setOnClickListener(v -> {
-            new AlertDialog.Builder(MainActivity.this)
-                    .setMessage("111")
-                    .create()
-                    .show();
+//            new AlertDialog.Builder(MainActivity.this)
+//                    .setMessage("111")
+//                    .create()
+//                    .show();
+            Log.i(TAG, "init test: ssss start");
+//            startActivity(new Intent(MainActivity.this, SecActivity.class));
+            boolean httpUrl = Util.isHttpUrl(Util.TEST_URL);
+            Log.i(TAG, "init test: " + httpUrl);
         });
 
         Class<?> proxyClass = Proxy.getProxyClass(UserManager.class.getClassLoader(), new Class<?>[]{UserManager.class});

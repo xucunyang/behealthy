@@ -47,7 +47,7 @@ class ActivityArgumentProperty<T>: ReadWriteProperty<Activity, T> {
     override fun setValue(thisRef: Activity, property: KProperty<*>, value: T) {
         val intent = thisRef.intent ?: Intent()
         var bundle = Bundle()
-        bundle["aa"] = 1
-        intent.putExtras(bundle) = value
+//        bundle["aa"] = 1
+//        intent.putExtras(bundle) = value
     }
 }
