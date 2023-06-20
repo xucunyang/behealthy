@@ -92,16 +92,24 @@ public class AsmUnitTest {
             int e = newLocal(Type.LONG_TYPE);
             storeLocal(e);
 
+            // 调用static方法java/lang/System.PrintStream out
             getStatic(Type.getType("L/java/lang/System;"), "out", Type.getType("Ljava/io/PrintStream;"));
+
+            // 创建实例 new StringBuilder()
             newInstance(Type.getObjectType("Ljava/lang/StringBuilder;"));
             dup();
 
+            // 调用StringBuilder的无参构造方法
             invokeConstructor(Type.getType("Ljava/lang/StringBuilder"), new Method("<init>", "()V"));
+
+            // 将“cost”从常量池推送至栈顶
             visitLdcInsn("cost:");
 
+            // 调用方法StringBuilder.append（StringBuilder）
             invokeVirtual(Type.getType("Ljava/lang/StringBuilder"),
                     new Method("append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;"));
 
+            // e - s
             loadLocal(e);
             loadLocal(s);
             math(SUB, Type.LONG_TYPE);
@@ -128,8 +136,8 @@ public class AsmUnitTest {
             File file = new File(fullPath.toString());
             if (paths.length - 1 != i) {
                 if (!file.exists()) {
-                    file.mkdir();
-                    System.out.println("创建目录为：" + fullPath.toString());
+                    boolean result = file.mkdir();
+                    System.out.println("创建目录为：" + fullPath.toString() + ", success:" + result);
                 }
             }
         }
