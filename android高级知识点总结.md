@@ -55,7 +55,16 @@
 > + 对 Dalvik、ART 虚拟机有什么了解？对比？
 
 #### 类加载过程 （需要多看看，重在理解，对于热修复和插件化比较重要）
+> > <img src="./pic/类加载过程.png" width="900"/>
 
+> > 1. 加载：通过classLoader将二进制文件加载到内存；并.class数据存储方法区运行时数据结构；在堆中生成Class对象作为运行时数据结构入口；
+> > 2. 链接：
+> > > * (1) 验证：验证字节码是否对jvm有危害，语法、逻辑是否正确
+> > > * (2) 准备：类变量赋初值（类型默认值）
+> > > * (3) 解析：符号引用替换为地址引用
+> > 3. 初始化：执行init()构造方法，变量赋初始值
+> > 4. 使用
+> > 5. 卸载
 
 ### 数据结构
 > + 数组
@@ -375,7 +384,7 @@ OkHttp
 
 
 ## Kotlin
-
+[kotlin相关必知必会](https://gonglipeng.blog.csdn.net/article/details/124001671?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EPayColumn-1-124001671-blog-122735114.235%5Ev38%5Epc_relevant_anti_t3_base&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EPayColumn-1-124001671-blog-122735114.235%5Ev38%5Epc_relevant_anti_t3_base&utm_relevant_index=1)
 
 ## JavaScript
 
