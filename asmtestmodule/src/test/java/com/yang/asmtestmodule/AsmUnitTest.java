@@ -13,12 +13,18 @@ import org.objectweb.asm.commons.Method;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Hashtable;
 
 public class AsmUnitTest {
 
     @Test
     public void testAsm() throws Exception {
         InjectTest.main(null);
+        Collections.synchronizedMap(new HashMap<String, String>());
+//        new Hashtable<String, String>();
+        System.out.println("======> " + Integer.toBinaryString(0x7FFFFFFF).length());
     }
 
     @Test

@@ -61,16 +61,26 @@
 > > 2. 链接：
 > > > * (1) 验证：验证字节码是否对jvm有危害，语法、逻辑是否正确
 > > > * (2) 准备：类变量赋初值（类型默认值）
-> > > * (3) 解析：符号引用替换为地址引用
+> > > * (3) 解析：符号引用替换为地址引用，变量、方法名、类名参数等
 > > 3. 初始化：执行init()构造方法，变量赋初始值
 > > 4. 使用
 > > 5. 卸载
+> > * 参考链接[JVM 学习笔记（一）内存结构-CodeAli](https://blog.csdn.net/weixin_50280576/article/details/113742011?spm=1001.2014.3001.5502)
+> > * 参考链接[JVM 学习笔记（二）垃圾回收-CodeAli](https://blog.csdn.net/weixin_50280576/article/details/113775575?spm=1001.2014.3001.5502)
+> > * 参考链接[JVM 学习笔记（三）类加载与字节码技术&内存模型-CodeAli](https://blog.csdn.net/weixin_50280576/article/details/113784268?spm=1001.2014.3001.5502)
+> > * 参考链接[java类的加载过程](https://blog.csdn.net/mojir/article/details/103436878)
 
 ### 数据结构
 > + 数组
 > + ArrayList & LinkedList
 > +  Map & Set
 > + HashMap & HashSet & HashTable
+> > * HashMap
+> > > 1. 长度总是2^n，为什么需要这样子，默认大小是16：
+> > > > * 数组的length - 1为0x0111111形式二进制值，按位与“&“运算后在高16位与低16位异或运算”^“即为该键值对的索引，这样哈希碰撞的概率降低提高查找效率，put/get都需要使用hash计算
+> > > > * 当容量达到阈值时扩容需要重新计算各Entry的hash索引，此时长度为2^n作为容量可以保证只有一半的Entry需要调整位置，并能快速得出新位置的索引
+> > > 2. 由数组实现，根据key的hash值确定位置，key相同情况以链表形式存储，新put的K/V生成的Entry放在链表结尾
+> * [Java中Vector和ArrayList的区别](https://blog.csdn.net/qq_43170213/article/details/89335990)
 
 
 ### 反射
@@ -89,18 +99,33 @@
 > > > + 原子性（不可分割）
 > > > + 可见性（对多核多线程多能取到最新的值）
 > > > + 有序性（为提高运行效率会指令重排）
+> > >
+> > > [Java 并发编程上篇 -（Synchronized 原理、LockSupport 原理、ReentrantLock 原理）](https://blog.csdn.net/weixin_50280576/article/details/113033975?spm=1001.2014.3001.5502)
+> > > [Java 并发编程中篇 -（JMM、CAS 原理、Volatile 原理）](https://blog.csdn.net/weixin_50280576/article/details/113532093)
+> > > [Java 并发编程下篇 -（线程池）](https://blog.csdn.net/weixin_50280576/article/details/113532107)
+> > > [Java 并发编程下篇 -（JUC、AQS 源码、ReentrantLock 源码）](https://blog.csdn.net/weixin_50280576/article/details/113727645)
 
 #### synchronized 和 volatile关键字
 
 ##### 面试QA
->> + Q:volatile为什么不能保证i++
->> > A:不能保证原子性，i++ => temp = i + 1 => i = temp
->> > 
-CAS 乐观锁
+> > + Q:volatile为什么不能保证i++
+> > > A:不能保证原子性，i++ => temp = i + 1 => i = temp
+
+> > + CAS 乐观锁
+> + 乐观锁，compare and swap，UNSAFE#compareAndSwap()
+内存值origin，内存值副本copy，修改后的是changed，
+cas操作若copy==origin，则origin=changed。
+如何保证cas同时别的线程不会cas，处理器cpu层作了限制保证原子性
+https://www.cnblogs.com/myopensource/p/8177074.html
+
+
 
 #### 线程
 
+
 ##### 线程有哪些状态，哪些锁，各种锁的区别
+* NEW（初始化状态）、RUNNABLE（可运行状态/运行状态）、BLOCKED（阻塞状态）、WAITING（等待状态）、TIMED_WAITING（有时限的等待）、TERMINATED（终止状态）
+* [理解Java线程状态（6种，6种，6种）](https://blog.csdn.net/acc__essing/article/details/127470780)
 
 ##### sleep 、wait、yield 的区别，wait 的线程如何唤醒它
 
@@ -263,7 +288,9 @@ CAS 乐观锁
 
 
 
+
 ## Android
+
 
 
 ### MVC & MVP & MVVM
@@ -282,25 +309,110 @@ CAS 乐观锁
 * MVVM和MVP的关系：MVVM 模式将 Presenter 改名为 ViewModel，基本上与 MVP 模式完全一致。Presenter与View的交互是通过接口来进行的。 2、唯一的区别是，MVVM采用双向绑定（data-binding）：View的变动，自动反映在 ViewModel，反之亦然，model变动通过livedata监听发应给view。这样开发者就不用处理接收事件和View更新的工作，框架已经帮你做好了。
 * MVC & MVP区别：
 
+
+
+
 ### Binder
+fork进程 分支复制类似
+效率高：内存映射一次复制，相比于管道消息队列，两次复制
+稳定性：C/S结构，相比于内存共享效率虽然高，但是流程复杂难以控制
+安全性：每个程序都有uid pid，恶意程序无法仿冒
+
+
 
 ### 四大组件
 
 > + Activity
+> > 1.Activity 说下Activity生命周期 Activity A 启动另一个Activity B 会调用哪些方法？
+如果B是透明主题的又或则是个DialogActivity呢
+说下onSaveInstanceState()方法的作用 ? 何时会被调用？
+Activity的启动流程 onSaveInstanceState(),onRestoreInstanceState的掉用时机
+activity的启动模式和使用场景
+Activity A跳转Activity B，再按返回键，生命周期执行的顺序 横竖屏切换,按home键,按返回键,锁屏与解锁屏幕,跳转透明Activity界面,启动一个 Theme 为 Dialog 的 Activity，弹出Dialog时Activity的生命周期
+onStart 和 onResume、onPause 和 onStop 的区别 Activity之间传递数据的方式Intent是否有大小限制，如果传递的数据量偏大，有哪些方案 Activity的onNewIntent()方法什么时候会执行
+显示启动和隐式启动
+scheme使用场景,协议格式,如何使用
+
 > + Service
+> > 2.Service service 的生命周期，两种启动方式的区别 Service的两种启动方式？区别在哪
+如何保证Service不被杀死 ？
+ Service与Activity怎么实现通信
+IntentService是什么,IntentService原理，应用场景及其与Service的区别 Service 的 onStartCommand 方法有几种返回值?各代表什么意思?
+bindService和startService混合使用的生命周期以及怎么关闭
+用过哪些系统Service ？
+了解ActivityManagerService吗？发挥什么作用
+
 > + Broadcast Receiver
+> > 广播的两种注册方式的区别
+广播发送和接收的原理
+本地广播和全局广播的区别
+
 > + ContentProvider
+> > 什么是ContentProvider及其使用
+ContentProvider的权限管理
+ContentProvider,ContentResolver,ContentObserver之间的关系
+ContentProvider的实现原理
+ContentProvider的优点
+Uri 是什么
 
+
+
+### 线程间通讯（Handler）
+> Handler Handler的实现原理  
+> 子线程中能不能直接new一个Handler,为什么主线程可以  
+> 主线程的Looper第一次调用loop方法,什么时候,哪个类  
+> Handler导致的内存泄露原因及其解决方案  
+> 一个线程可以有几个Handler,几个Looper,几个MessageQueue对象  
+> Message对象创建的方式有哪些 & 区别？  
+> Message.obtain()怎么维护消息池的Handler  
+> 有哪些发送消息的方法 Handler的post与sendMessage的区别和应用场景  
+> handler postDealy后消息队列有什么变化，假设先 postDelay 10s, 再postDelay 1s, 怎么处理这2条消息  
+> MessageQueue是什么数据结构 Handler怎么做到的一个线程对应一个Looper，如何保证只有一个MessageQueue ThreadLocal在Handler机制中的作用  
+> HandlerThread是什么 & 好处 &原理 & 使用场景  
+> IdleHandler及其使用场景 消息屏障,同步屏障机制  
+> 子线程能不能更新UI  
+> 为什么Android系统不建议子线程访问UI  
+> Android中为什么主线程不会因为Looper.loop()里的死循环卡死  
+> MessageQueue#next 在没有消息的时候会阻塞，如何恢复？  
+> Handler消息机制中，一个looper是如何区分多个Handler的 当Activity有多个Handler的时候，怎么样区分当前消息由哪个Handler处理
+> 处理message的时候怎么知道是去哪个callback处理的
+> Looper.quit/quitSafely的区别 通过Handler如何实现线程的切换
+> Handler 如何与 Looper 关联的 Looper 如何与 Thread 关联的 Looper.loop()源码 MessageQueue的enqueueMessage()方法如何进行线程同步的 MessageQueue的next()方法内部原理
+> 子线程中是否可以用MainLooper去创建Handler，Looper和Handler是否一定处于一个线程
+>
 ###  自定义 View
-
-
+> * 子View创建MeasureSpec创建规则是什么
+> * 自定义Viewwrap_content不起作用的原因
+> * 在Activity中获取某个View的宽高有几种方法
+> * 为什么onCreate获取不到View的宽高
+> * View#post与Handler#post的区别
+> * Android绘制和屏幕刷新机制原理
+> * Choreography原理
+> * 什么是双缓冲
+> * 为什么使用SurfaceView
+> * 什么是SurfaceView
+> * View和SurfaceView的区别
+> * SurfaceView为什么可以直接子线程绘制
+> *  SurfaceView、TextureView、SurfaceTexture、GLSurfaceView
+> * getWidth()方法和getMeasureWidth()区别
+> * invalidate() 和 postInvalidate() 的区别
+> * Requestlayout，onlayout，onDraw，DrawChild区别与联系
+> * LinearLayout、FrameLayout 和 RelativeLayout 哪个效率高
+> * LinearLayout的绘制流程
+> * 自定义 View 的流程和注意事项
+> * 自定义View如何考虑机型适配
+> * 自定义控件优化方案
+> * invalidate怎么局部刷新
+View加载流程（setContentView）
 
 ###  事件拦截分发
 
 > > + <img src="./pic/android-事件分发.png" width="1200"/>
-> > + 事件分发已经不是直接让你讲了，会给你具体的场景，比如 A 嵌套 B ，B 嵌套 C，从 C 中心按下，一下滑出到 A，事件分发的过程，这里面肯定会有 ACTION_CANCEL 的相关调用时机。
+> > + 事件分发已经不是直接让你讲了
 > > + 关于ACTION_CANCEL
-> > + 例子分析：
+> > > 父布局拦截事件，子view会收到ACTION_CANCEL,首次点击ACTION_DOWN时清空action标识
+> > + 例子分析：会给你具体的场景，比如 A 嵌套 B ，B 嵌套 C，从 C 中心按下，一下滑出到 A，事件分发的过程，这里面肯定会有 ACTION_CANCEL 的相关调用时机。
+> > > 滑动出C范围到A的范围时不会触发ACTION_CANCEL，抬起时不会触发click事件，onTouchEvent方法再触发performClick前会判断是否有pressed标识位，ACTION_MOVE移动出该视图范围时会清除该标识位
 ### ANR
 
 ### 内存泄漏
@@ -333,23 +445,48 @@ CAS 乐观锁
 
 #### 性能优化 
 
+> + 启动优化：
+按需初始化：多进程
+异步初始化：多线程，线程池
+延迟初始化：即仅初始化立即需要用到的对象，不要创建全局静态对象，而是移动到单例模式，在程序第一次使用它的时候进行初始化。
+空闲时初始化：IdleHandler
+
+> +  UI优化： 嵌套层级：约束布局
+	逻辑分离： 按需加载：viewStub FrameLayout LinearLayout
+	应用瘦身： webp
+
+> +  列表优化：
+> > 1. 数据处理和视图加载分离：数据的处理逻辑尽可能放在异步处理，onBindViewHolder 方 法中只处理数据填充到视图中。
+> > 2. 数据优化：分页拉取远端数据，对拉取下来的远端数据进行缓存，提升二次加载速度；对 于新增或者删除数据通过 DiffUtil 来进行局部刷新数据，而不是一味地全局刷新数据。
+> > 3. 布局优化：减少布局层级，简化 ItemView
+> > 4. 升级 RecycleView 版本到 25.1.0 及以上使用 Prefetch 功能
+> > 5. 通过重写 RecyclerView.onViewRecycled(holder) 来回收资源
+> > 6. 如果 Item 高度是固定的话，可以使用 RecyclerView.setHasFixedSize(true); 来避免 requestLayout 浪费资源
+> > 7. 对 ItemView 设置监听器，不要对每个 Item 都调用 addXxListener，应该大家公用一个 XxListener，根据 ID 来进行不同的操作，优化了对象的频繁创建带来的资源消耗
+> > 8. 如果多个 RecycledView 的 Adapter 是一样的，比如嵌套的 RecyclerView 中存在一样 的 Adapter，可以通过设置 RecyclerView.setRecycledViewPool(pool)，来共用一个 RecycledViewPool。
+
+> + 图片优化：
+	改变尺寸： 采样率 matrix压缩
+	改变质量： option
+
 > + 工具
 (TraceView、Systrace、调试 GPU 过度绘制 & GPU 呈现模式分析、Hierarchy Viewer、MAT、Memory Monitor & Heap Viewer & Allocation Tracker 等）
 
 > + 调优  （讲讲你自己项目中做过的性能优化）
 
 >> 1. 网络：API 优化、流量优化、弱网优化  
->> 2. 内存：OOM 处理、内存泄漏、内存检测、分析、Bitmap 优化 ,LeakCanary 原理，什么检测内存泄漏需要两次？
->> 3. 绘制 
->> 4. 电量：WeakLock 机制、JobScheduler 机制  
->> 5. APK 瘦身 （APK 瘦身是怎么做的，只用 armabi-v7a 没有什么问题么？
-   APK 瘦身这个基本是 100% 被面试问到，可能是我简历上提到的原因。）  
->> 6. 内存抖动  
->> 7. 内存泄漏  
->> 8. 卡顿 {如何检测卡顿，卡顿原理是什么，怎么判断页面响应卡顿还是逻辑处理造成的卡顿} ，BlockCanary 的原理 
->> 9. 布局优化、过度渲染处理、ANR 处理、监控、埋点、Crash 上传。 
->> 10. 启动优化
->> Glide ：加载、缓存、LRU 算法  
+> > 2. 内存：OOM 处理、内存泄漏、内存检测、分析、Bitmap 优化 ,LeakCanary 原理，什么检测内存泄漏需要两次？
+> > 3. 绘制
+> > 4. 电量：WeakLock 机制、JobScheduler 机制
+> > 5. APK 瘦身 （APK 瘦身是怎么做的，只用 armabi-v7a 没有什么问题么？
+> >     APK 瘦身这个基本是 100% 被面试问到，可能是我简历上提到的原因。）
+> > 6. 内存抖动
+> > 7. 内存泄漏
+> > 8. 卡顿 {如何检测卡顿，卡顿原理是什么，怎么判断页面响应卡顿还是逻辑处理造成的卡顿} ，BlockCanary 的原理
+> > 9. 布局优化、过度渲染处理、ANR 处理、监控、埋点、Crash 上传。
+> > 10. 启动优化
+
+> > Glide ：加载、缓存、LRU 算法  
 (如何自己设计一个大图加载框架)  
 （LRUCache 原理）
 
@@ -451,110 +588,8 @@ Hybrid 通信原理是什么，有做研究吗？
 
 
 
-### Android Framework
 
 
-
-#### AMS 、PMS
-
-
-
-#### Activity 启动流程，App 启动流程
-
-
-
-#### Binder 机制（IPC、AIDL 的使用）
-
-
-#### 讲讲 Linux 上的 IPC 通信，Binder 有什么优势，Android 上有哪些多进程通信机制?
-
-* 项目中遇见了什么多进程场景？ 
-* AIDL 是什么？解决了什么问题？ 
-* 谈谈对进程共享和线程安全的认知？ 
-
-
-
-#### 为什么使用 Parcelable，好处是什么？
-
-#### Android 图像显示相关流程，Vsync 信号等
-
-###  
-
-*5*
-
- 算法与数据结构
-
-
-
-\1. 单链表：反转、插入、删除
-
-
-
-\2. 双链表：插入、删除
-
-
-
-\3. 手写常见排序、归并排序、堆排序
-
-
-
-\4. 二叉树前序、中序、后序遍历
-
-
-
-\5. 最大 K 问题
-
-
-
-\6. 广度、深度优先搜索算法
-
-
-
-\7. String 转 int。
-
-
-
-核心算法就三行代码，不过临界条件很多，除了判空，还需要注意负数、Integer 的最大最小值边界等；
-
-
-
-\8. 如何判断一个单链表有环？
-
-
-
-\9. 链表翻转；
-
-
-
-\10. 快排；
-
-
-
-\11. 100 亿个单词，找出出现频率最高的单词。要求几种方案；
-
-
-
-\12. 链表每 k 位逆序；
-
-
-
-\13. 镜像二叉树；
-
-
-
-\14. 找出一个无序数组中出现超过一半次数的数字；
-
-
-
-\15. 计算二叉树的最大深度，要求非递归算法。
-
-
-
-\16. String 方式计算加法。
-
-###  
-
-*6*
 
  项目&HR
 
