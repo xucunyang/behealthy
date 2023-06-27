@@ -122,9 +122,48 @@ View加载流程（setContentView）
 > > > 父布局拦截事件，子view会收到ACTION_CANCEL,首次点击ACTION_DOWN时清空action标识
 > > + 例子分析：会给你具体的场景，比如 A 嵌套 B ，B 嵌套 C，从 C 中心按下，一下滑出到 A，事件分发的过程，这里面肯定会有 ACTION_CANCEL 的相关调用时机。
 > > > 滑动出C范围到A的范围时不会触发ACTION_CANCEL，抬起时不会触发click事件，onTouchEvent方法再触发performClick前会判断是否有pressed标识位，ACTION_MOVE移动出该视图范围时会清除该标识位
+
+
+
 ### ANR
 
+> + ANR出现常见原因
+> > 1. 主线程频繁进行耗时的IO操作：如数据库读写
+> > 2. 多线程操作的死锁，主线程被block；
+> > 3. 主线程被Binder 对端block；
+> > 4. System Server中WatchDog出现ANR；
+> > 5. service binder的连接达到上线无法和和System Server通信
+> > 6. 系统资源已耗尽（管道、CPU、IO）
+
 ### 内存泄漏
+
+> * 常见引发内存泄露原因主要有：
+> > + 集合类
+> > > 集合类 添加元素后，仍引用着 集合元素对象，导致该集合元素对象不可被回收，从而导致内存泄漏
+```
+          // 通过 循环申请Object 对象 & 将申请的对象逐个放入到集合List
+          List<Object> objectList = new ArrayList<>();        
+          for (int i = 0; i < 10; i++) {
+               Object o = new Object();
+               objectList.add(o);
+               o = null;
+          }
+          // 虽释放了集合元素引用的本身：o=null）
+          // 但集合List 仍然引用该对象，故垃圾回收器GC 依然不可回收该对象
+```
+> > + Static关键字修饰的成员变量
+> > > 单例模式应该引用生命周期等于应用生命周期的对象。如上述实例，应传递Application的Context，因Application的生命周期 = 整个应用的生命周期
+
+储备知识
+非静态内部类 / 匿名类 默认持有外部类的引用；而静态内部类则不会
+
+常见情况
+3种，分别是：非静态内部类的实例 = 静态、多线程、消息传递机制（Handler）> > > + 非静态内部类 / 匿名类
+
+> > + 资源对象使用后未关闭
+> > + 
+> [Android 常见内存泄漏总结、避免踩坑、提供解决方案。](https://blog.csdn.net/weixin_44235109/article/details/122029725)
+
 
 
 ### OOM
@@ -133,6 +172,63 @@ View加载流程（setContentView）
 
 
 ## Kotlin
+
+
+### 协程
+
+> [Kotlin协程：协程的基础与使用](https://blog.csdn.net/LeeDuoZuiShuai/article/details/125961337)
+> _特点_
+> >    1）更加轻量级，占用资源更少。
+> >    2）避免“回调地狱”，增加代码可读性。
+> >    3）协程的挂起不阻塞线程。
+
+> > **涉及的类**
+> > + 协程的上下文
+> > > 一个结构介于Set和Map之间的索引集。
+
+> > + 协程的作用域  协程作用域用于管理作用域内协程的生命周期
+> > > 当父协程被取消或发生异常时，会自动取消父协程所有的子协程。当子协程取消或发生异常时，在coroutineScope作用域下，会导致父协程取消；而在supervisorScope作用域下，则不会影响父协程。
+协程的作用域只对父子协程有效，对子孙协程无效。例如：启动父协程，在supervisorScope作用域内启动子协程。当子协程在启动孙协程时，在不指定为supervisorScope作用域的情况下，默认为coroutineScope作用域。
+
+> > + 协程调度器
+> >
+> > + 协程的启动模式
+
+> > + 协程的生命周期 一个结构介于Set和Map之间的索引集。
+
+#### 使用
+> > > * 创建
+> > > > + runBlocking
+> > > > > 阻塞线程直到lambda执行完毕，测试用
+
+> > > > + GlobalScope.launch
+> > > > > 该方法用于在协程作用域中异步启动一个新的协程，调用该方法不会阻塞线程。
+
+> > > > + GlobalScope.async
+> > > > > 该方法用于在协程作用域中中异步启动一个新的协程，调用该方法不会阻塞线程。async方法与launch方法的不同之处在于可以携带返回值。  
+> > > > > 调用该方法会返回一个Deferred接口指向的对象，调用该对象可以获取协程执行的结果。同时，Deferred接口继承自Job接口，因此仍然可以操作协程的生命周期。
+
+> > > > + GlobalScope.withContext
+> > > > > 该方法用于在当前协程的执行过程中，切换到调度器指定的线程去执行参数block中的代码，并返回一个结果。调用该方法可能会使当前协程挂起，并在方法执行结束时恢复挂起。
+
+> > > > + GlobalScope.produce
+
+> > > * 取消
+
+> > > * 相互通信
+> > > > Channel用于协程间的通信。Channel本质上是一个并发安全的队列，类似BlockingQueue。  
+> > > > 在使用时，通过调用同一个Channel对象的send和receive方法实现通信
+
+
+
+### 原理
+
+> + 续体传递（Continuation-Pass-Style）
+> + 状态机
+> >  协程的代码在经过Kotlin编译器处理时，会被优化成状态机模型。每段代码有三个状态：未执行、挂起、已恢复(完成)。  
+处于未执行状态的代码可以被执行，执行过程中发生挂起，会进入挂起状态，从挂起中恢复或执行完毕会进入已恢复(完成)状态。  
+> > 当多个像这样的代码进行协作时，可以组合出更复杂的状态机。
+
 [kotlin相关必知必会](https://gonglipeng.blog.csdn.net/article/details/124001671?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EPayColumn-1-124001671-blog-122735114.235%5Ev38%5Epc_relevant_anti_t3_base&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EPayColumn-1-124001671-blog-122735114.235%5Ev38%5Epc_relevant_anti_t3_base&utm_relevant_index=1)
 
 
