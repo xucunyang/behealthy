@@ -173,6 +173,8 @@ View加载流程（setContentView）
 
 ## Kotlin
 
+#### when
+when的分支条件可以为任意表达式
 
 ### 协程
 
