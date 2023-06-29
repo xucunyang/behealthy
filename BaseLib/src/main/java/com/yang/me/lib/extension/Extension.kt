@@ -85,7 +85,7 @@ fun <T> launchWrapped(
             val result = withContext(IO) {
                 asyncBlock()
             }
-            uiBlock?.let { it.invoke(result) }
+            uiBlock?.invoke(result)
         } catch (e: java.lang.Exception) {
             log("[Exception]: $e")
             e.printStackTrace()

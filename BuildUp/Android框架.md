@@ -72,6 +72,7 @@ private void printlnQueue(String tag) {
 > 1. 生命周期感知，通过activity添加不可见fragment
 > 2. 外观模式隐藏复杂实现
 > 3. 三级缓存，活动缓存、内存缓存、磁盘缓存；LruCache，最近最少使用策略，使用的cache移动到栈顶，栈满了移除栈底元素
+java 哪个类使用这个算法
 
 
 
@@ -96,9 +97,19 @@ private void printlnQueue(String tag) {
 
 #### Jetpack architecture
 > + ViewModel Livedata
-> + Lifecycle
+** Lifecycle **
+
+> > 原理：
 > + Compose
 
+> + Kotlin coroutine
+    continuation-passing-style + 状态机
+
+> > lifecycleScope
+
+> > viewModelScope
+
+> > flow
 
 > > Glide ：加载、缓存、LRU 算法  
 (如何自己设计一个大图加载框架)  

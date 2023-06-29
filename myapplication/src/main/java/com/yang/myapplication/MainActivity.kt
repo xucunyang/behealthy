@@ -1,12 +1,18 @@
 package com.yang.myapplication
 
 import android.app.Activity
-import android.content.Intent
+import android.app.AlertDialog
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.yang.myapplication.databinding.ActivityMainBinding
 import com.yang.myapplication.proxy.LogHandler
 import com.yang.myapplication.proxy.UserManager
@@ -20,9 +26,9 @@ import java.lang.ref.WeakReference
 import java.lang.reflect.Proxy
 
 class MainActivity :
-    BaseActivity<ActivityMainBinding?>() {
+    BaseActivity<ActivityMainBinding>() {
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        Log.i(TAG, "dispatchTouchEvent: " + event.action)
+        log(TAG, "dispatchTouchEvent: " + event.action)
         return super.dispatchTouchEvent(event)
     }
 
@@ -31,15 +37,15 @@ class MainActivity :
         return super.onTouchEvent(event)
     }
 
-    override fun getLayoutId(): Int {
-        return R.layout.activity_main
-    }
+    override val layoutId: Int
+        get() = R.layout.activity_main
+
 
     override fun init() {
 
         testCoroutine()
 
-        mViewBinding!!.button.setOnClickListener { v: View? ->
+        viewBinding!!.button.setOnClickListener { v: View? ->
             Log.i(TAG, "button: ")
             Log.i(TAG, "init: ssss start")
             //            startActivity(new Intent(MainActivity.this, SecActivity.class));
@@ -53,13 +59,13 @@ class MainActivity :
 //        });
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
-        mViewBinding!!.button2.setOnClickListener { v: View? ->
+        viewBinding!!.button2.setOnClickListener { v: View? ->
             AlertDialog.Builder(this@MainActivity)
                 .setMessage("111")
                 .create()
                 .show()
         }
-        mViewBinding!!.button2.setOnClickListener { v: View? ->
+        viewBinding!!.button2.setOnClickListener { v: View? ->
             Log.d("xcyxch", "onclick --->")
             //            startActivity(new Intent(MainActivity.this, ThirdActivity.class));
             Glide.with(this@MainActivity).asBitmap()
@@ -75,13 +81,13 @@ class MainActivity :
                         resource: Bitmap,
                         transition: Transition<in Bitmap?>?
                     ) {
-                        Util.showShortCut(
-                            this@MainActivity,
-                            resource,
-                            "groupId_001",
-                            "group_nickName",
-                            "nickname"
-                        )
+//                        Util.showShortCut(
+//                            this@MainActivity,
+//                            resource,
+//                            "groupId_001",
+//                            "group_nickName",
+//                            "nickname"
+//                        )
                     }
                 })
         }
@@ -133,7 +139,16 @@ class MainActivity :
 
 //        testChannelInCoroutines()
 
-        testJobJoin()
+//        testJobJoin()
+
+        testLifecycle()
+    }
+
+
+    private fun testLifecycle() {
+        lifecycleScope.launch {
+
+        }
     }
 
     private fun testJobJoin() {

@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import com.yang.me.healthy.R
 import com.yang.me.healthy.databinding.FragmentOtherBinding
 import com.yang.me.lib.BaseBindActivity
@@ -14,11 +13,12 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 class ThirdActivity: BaseBindActivity<FragmentOtherBinding>() {
-    override fun getLayoutId()  = R.layout.fragment_other
+    override val layoutId: Int
+        get() = R.layout.fragment_other
 
     override fun init() {
         intent?.getStringExtra("title").apply {
-            mViewBinding.title.text = this as String
+            viewBinding.title.text = this as String
         }
     }
 

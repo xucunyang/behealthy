@@ -26,7 +26,7 @@ public class SecActivity extends BaseActivity<ActivitySecBinding> {
         for (int i = 0; i < 4; i++) {
             mFragments.add(MyFragment.newInstance(String.format(Locale.CHINA, "第%1$s个fragment", i)));
         }
-        mViewBinding.viewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), getLifecycle(), mFragments));
+        getViewBinding().viewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), getLifecycle(), mFragments));
     }
 
     static class MyPagerAdapter extends FragmentStateAdapter {
