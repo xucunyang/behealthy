@@ -21,6 +21,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.produce
+import kotlinx.coroutines.flow.*
 import java.lang.ref.ReferenceQueue
 import java.lang.ref.WeakReference
 import java.lang.reflect.Proxy
@@ -141,12 +142,80 @@ class MainActivity :
 
 //        testJobJoin()
 
-        testLifecycle()
+//        testLifecycle()
+
+//        testJobJoinCancel()
+//        lifecycleScope.launch {
+        val launchIn = (1..3)
+            .asFlow()
+            .transform {
+                if (it == 2) {
+                    emit("emit value is ${it * 2}")
+                }
+
+                emit("transform value is ${it}")
+            }.onEach {
+                log("onEach $it")
+            }.launchIn(lifecycleScope)
+
+//        }
+
     }
 
+    fun ss(value: Int) = value == 1
 
     private fun testLifecycle() {
-        lifecycleScope.launch {
+        runBlocking {
+            log("run blocking")
+            val job = flowEvent().onEach {
+                log("下游 event $it")
+            }.onCompletion {
+                log("onCompletion")
+            }.catch {
+                log("catch $it")
+            }.launchIn(CoroutineScope(Dispatchers.IO))
+
+            async {
+                log("before cancel")
+                delay(1100)
+                job.cancel("delay 200 cancel")
+                log("after cancel")
+            }
+            job.join()
+            log("run blocking below join")
+        }
+//        lifecycleScope.launch {
+//            flowEvent().onEach {
+//                log("下游事件 $it")
+//            }.launchIn(CoroutineScope(Dispatchers.IO))
+//        }
+    }
+
+    suspend fun flowEvent() = (1..3)
+        .asFlow()
+        .onEach {
+            delay(500)
+            log(" 上游 event $it")
+        }.flowOn(Dispatchers.Default)
+
+    private fun testJobJoinCancel() {
+        runBlocking {
+            log("run blocking start")
+            val job = launch(start = CoroutineStart.LAZY) {
+                repeat(100) {
+                    log("in repeating start -> $it")
+                    delay(500)
+                    log("in repeating end   -> $it")
+                }
+            }
+            async {
+                log("start delay 1100")
+                delay(1300)
+                log("cancel job")
+//                job.cancel()
+                job.join()
+                log("run blocking end")
+            }
 
         }
     }
@@ -166,9 +235,9 @@ class MainActivity :
                 log("Kotlin Coroutines 333")
             }
             log("hello")// 主线程继续执行 输出hello
-//            myJob1.join() // myJob.join() 挂起协程(GlobalScope.launch创建的协程) 直到myJob执行完毕
-//            myJob2.join() // myJob.join() 挂起协程(GlobalScope.launch创建的协程) 直到myJob执行完毕
-//            myJob3.join() // myJob.join() 挂起协程(GlobalScope.launch创建的协程) 直到myJob执行完毕
+            myJob1.join() // myJob.join() 挂起协程(GlobalScope.launch创建的协程) 直到myJob执行完毕
+            myJob2.join() // myJob.join() 挂起协程(GlobalScope.launch创建的协程) 直到myJob执行完毕
+            myJob3.join() // myJob.join() 挂起协程(GlobalScope.launch创建的协程) 直到myJob执行完毕
             log("world")
         }
     }
@@ -335,6 +404,6 @@ class MainActivity :
     }
 
     fun log(vararg msg: String?) {
-        Log.d("coroutine-log", "[${Thread.currentThread().name}]:${msg.toList()}")
+        Log.d(TAG, "[${Thread.currentThread().name}]:${msg.toList()}")
     }
 }

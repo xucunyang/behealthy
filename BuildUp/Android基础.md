@@ -26,7 +26,11 @@ fork进程 分支复制类似
 效率高：内存映射一次复制，相比于管道消息队列，两次复制
 稳定性：C/S结构，相比于内存共享效率虽然高，但是流程复杂难以控制
 安全性：每个程序都有uid pid，恶意程序无法仿冒
-
+1. Binder驱动
+2. Sever服务端 获取0号引用注册服务端引用
+3. Client客户端 获取0号引用并查找返回服务端
+4. ServiceManager 在Binder驱动中0号引用
+[Android Binder机制(一) Binder的设计和框架](https://wangkuiwu.github.io/2014/09/01/Binder-Introduce/)
 
 
 ### 四大组件
@@ -174,7 +178,8 @@ View加载流程（setContentView）
 ## Kotlin
 
 #### when
-when的分支条件可以为任意表达式
+when支持类型enum， string， number更多 is判断
+when后可以不带参数，分支条件可以为任意返回boolean的表达式
 
 ### 协程
 
@@ -216,6 +221,11 @@ when的分支条件可以为任意表达式
 > > > > + GlobalScope.produce
 
 > > > * 取消
+> > > > cancel
+
+> > > * join _Job#join()_
+> > > > 阻塞当前协程直到job
+> > > > 当Job出现新建状态时也能启动
 
 > > > * 相互通信
 > > > > Channel用于协程间的通信。Channel本质上是一个并发安全的队列，类似BlockingQueue。  
@@ -234,5 +244,36 @@ when的分支条件可以为任意表达式
 [kotlin相关必知必会](https://gonglipeng.blog.csdn.net/article/details/124001671?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EPayColumn-1-124001671-blog-122735114.235%5Ev38%5Epc_relevant_anti_t3_base&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7EPayColumn-1-124001671-blog-122735114.235%5Ev38%5Epc_relevant_anti_t3_base&utm_relevant_index=1)
 
 
+
+### Flow
+响应式事件流
+#### 分类
+> + 冷流 - collect有消费才会生成事件
+
+> + 热流 - 没有消费也会生成事件，会丢事件
+
+#### 操作符
+
+> + flowOf
+> + asFlow
+> + flow{ emit(T) }
+
+> + flowOn
+> + zip/combine
+> + drop
+> + take
+> + map
+> + flatMapMerge
+> + flatMapLastest
+> + filter
+
+> + onEach
+> + onStart
+> + onCompletion
+
+> + catch
+> + 
+> + launchIn
+> + collect
 
 
