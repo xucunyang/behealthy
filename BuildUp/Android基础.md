@@ -82,7 +82,13 @@ Uri 是什么
 > handler postDealy后消息队列有什么变化，假设先 postDelay 10s, 再postDelay 1s, 怎么处理这2条消息  
 > MessageQueue是什么数据结构 Handler怎么做到的一个线程对应一个Looper，如何保证只有一个MessageQueue ThreadLocal在Handler机制中的作用  
 > HandlerThread是什么 & 好处 &原理 & 使用场景  
-> IdleHandler及其使用场景 消息屏障,同步屏障机制  
+> IdleHandler及其使用场景 消息屏障,同步屏障机制
+> > 同步屏障本质发送一个没有target的消息，然后判断是否是异步消息经行处理
+> > Traversal流程中先向MessageQueue插入了同步屏障消息（MessageQueue.postSyncBarrier()），再发送一个异步消息（msg.setAsynchronous(true)）
+> > 简单来说，就是找下一个要执行的消息时，如果发现了同步屏障，则往下找异步消息。所以有同步屏障时，Handler只会处理异步消息。
+同步屏障本质上是一个target为空的Message；
+消息轮询时，如果发现了同步屏障消息，则只处理异步消息，所以Android通过这种方式保证UI渲染任务优先处理。
+
 > 子线程能不能更新UI  
 > 为什么Android系统不建议子线程访问UI  
 > Android中为什么主线程不会因为Looper.loop()里的死循环卡死  
@@ -94,6 +100,26 @@ Uri 是什么
 > 子线程中是否可以用MainLooper去创建Handler，Looper和Handler是否一定处于一个线程
 >
 ###  自定义 View
+> * View绘制过程
+```
+ -> Activity.setContentView 
+ -> PhoneWindow.setContentView(layoutId)  
+ -> PhoneWindow.installDecor()  
+ -> PhoneWindow.mDecorView = new DecorView() // 包含layoutId已经加载到视图中
+ ...
+ -> ActivityThread.handleResumeActivity
+ -> Activity.makeVisible
+ -> ViewManager.addView
+ -> WindowManagerGlobal.addView
+ -> ViewRootImpl.setView
+ -> ViewRootImpl.requestLayout()
+ -> ViewRootImpl.scheduleTraversals
+ -> View.onMeasure
+ -> View.onLayout
+ -> View.onDraw
+```
+>> [Carson带你学Android：自定义View绘制准备-DecorView创建](https://www.jianshu.com/p/ac3262d233af)
+
 > * 子View创建MeasureSpec创建规则是什么
 > * 自定义Viewwrap_content不起作用的原因
 > * 在Activity中获取某个View的宽高有几种方法
@@ -115,7 +141,13 @@ Uri 是什么
 > * 自定义 View 的流程和注意事项
 > * 自定义View如何考虑机型适配
 > * 自定义控件优化方案
+>
 > * invalidate怎么局部刷新
+
+
+#### 自定义Viwe
+
+
 View加载流程（setContentView）
 
 ###  事件拦截分发
