@@ -114,6 +114,8 @@ Uri 是什么
  -> ViewRootImpl.setView
  -> ViewRootImpl.requestLayout()
  -> ViewRootImpl.scheduleTraversals
+ -> ViewRootImpl.doTraversals
+ -> ViewRootImpl.performTraversals
  -> View.onMeasure
  -> View.onLayout
  -> View.onDraw
@@ -121,8 +123,22 @@ Uri 是什么
 >> [Carson带你学Android：自定义View绘制准备-DecorView创建](https://www.jianshu.com/p/ac3262d233af)
 
 > * 子View创建MeasureSpec创建规则是什么
-> * 自定义Viewwrap_content不起作用的原因
+
+
+> * 自定义View的wrap_content不起作用的原因
+> > 在onMeasure()中的getDefaultSize（）的默认实现中，当View的测量模式是AT_MOST或EXACTLY时，  
+> > View的大小都会被设置成子View MeasureSpec的specSize。因为AT_MOST对应wrap_content；EXACTLY对应match_parent，  
+> > 所以，默认情况下，wrap_content和match_parent是具有相同的效果的。
+> > 因为在计算子View MeasureSpec的getChildMeasureSpec()中，子View MeasureSpec在属性被设置为wrap_content或match_parent情况下，  
+> > 子View MeasureSpec的specSize被设置成parenSize = 父容器当前剩余空间大小
+> > 所以：wrap_content起到了和match_parent相同的作用：等于父容器当前剩余空间大小
+> > 参考[Android 自定义View：为什么你设置的wrap_content不起作](https://www.jianshu.com/p/ca118d704b5e)
+
 > * 在Activity中获取某个View的宽高有几种方法
+> > View.post原理，向绘制Handler中添加消息，等绘制完成后执行，故能过去宽高
+> > > mAttachInfo.mHandler.post，执行会在ViewRootImpl中的doTraversals -> performMeasure -> performLayout -> performDraw - runnable.run
+> > >View.getViewTreeObserver.addGlobalLayoutListener，跟View.post时机差不多，都在ViewRootImpl的performTraversals中，时机在onLayout后，onDraw前，比view.post早
+
 > * 为什么onCreate获取不到View的宽高
 > * View#post与Handler#post的区别
 > * Android绘制和屏幕刷新机制原理
@@ -136,8 +152,19 @@ Uri 是什么
 > * getWidth()方法和getMeasureWidth()区别
 > * invalidate() 和 postInvalidate() 的区别
 > * Requestlayout，onlayout，onDraw，DrawChild区别与联系
-> * LinearLayout、FrameLayout 和 RelativeLayout 哪个效率高
+
+> * Invalidate/RequestLayout区别
+> > requestLayout会直接递归调用父窗口的requestLayout，直到ViewRootImpl,然后触发peformTraversals，
+> > 由于mLayoutRequested为true，会导致onMeasure和onLayout被调用。不一定会触发OnDraw
+> > requestLayout触发onDraw可能是因为在在layout过程中发现l,t,r,b和以前不一样，那就会触发一次invalidate，  
+> > 所以触发了onDraw，也可能是因为别的原因导致mDirty非空（比如在跑动画）
+> > view的invalidate不会导致ViewRootImpl的invalidate被调用，而是递归调用父view的invalidateChildInParent，  
+> > 直到ViewRootImpl的invalidateChildInParent，然后触发peformTraversals，会导致当前view被重绘，  
+> > 由于mLayoutRequested为false，不会导致onMeasure和onLayout被调用，而OnDraw会被调用
+
 > * LinearLayout的绘制流程
+> > 存在weight会触发两次measure
+
 > * 自定义 View 的流程和注意事项
 > * 自定义View如何考虑机型适配
 > * 自定义控件优化方案
@@ -149,6 +176,8 @@ Uri 是什么
 
 
 View加载流程（setContentView）
+
+
 
 ###  事件拦截分发
 
