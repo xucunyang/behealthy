@@ -2,6 +2,7 @@ package com.yang.myapplication
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
@@ -10,6 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.alibaba.android.arouter.launcher.ARouter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
@@ -17,6 +19,7 @@ import com.yang.myapplication.databinding.ActivityMainBinding
 import com.yang.myapplication.proxy.LogHandler
 import com.yang.myapplication.proxy.UserManager
 import com.yang.myapplication.proxy.UserManagerImpl
+import com.yang.myapplication2.MainActivity2
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -47,12 +50,9 @@ class MainActivity :
         testCoroutine()
 
         viewBinding!!.button.setOnClickListener { v: View? ->
-            Log.i(TAG, "button: ")
-            Log.i(TAG, "init: ssss start")
-            //            startActivity(new Intent(MainActivity.this, SecActivity.class));
-            val httpUrl =
-                Util.isHttpUrl(Util.PROD_URL) // 原因找到了！！！
-            Log.i(TAG, "init: $httpUrl")
+//            testReg()
+            ARouter.getInstance().build("/app2/main").navigation()
+//            startActivity(Intent(MainActivity@this, MainActivity2::class.java))
         }
         //        mViewBinding.linerlayout.setOnClickListener(v -> {
 //            Log.i(TAG, "linerlayout: ");
@@ -121,6 +121,15 @@ class MainActivity :
                 MyViewModel::class.java
             )
         Log.i(TAG, "init myViewModel: " + getObjName(myViewModel))
+    }
+
+    private fun testReg() {
+        Log.i(TAG, "button: ")
+        Log.i(TAG, "init: ssss start")
+        //            startActivity(new Intent(MainActivity.this, SecActivity.class));
+        val httpUrl =
+            Util.isHttpUrl(Util.PROD_URL) // 原因找到了！！！
+        Log.i(TAG, "init: $httpUrl")
     }
 
     private fun testCoroutine() {

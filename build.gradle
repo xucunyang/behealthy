@@ -58,4 +58,6 @@ ext {
     timberVersion = '4.7.1'
     truthVersion = '0.44'
     glideVersion = "4.5.0"
+
+    arouter_version = '1.5.2'
 }

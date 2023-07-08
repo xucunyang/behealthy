@@ -1,3 +1,4 @@
+include ':myapplication2'
 include ':asmtestmodule'
 include ':myapplication'
 include ':lib'
