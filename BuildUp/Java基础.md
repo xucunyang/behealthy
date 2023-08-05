@@ -2,6 +2,13 @@
 > + [理解Java内存模型](https://juejin.im/post/5bf2977751882505d840321d)
 
 
+> + 寄存器：最快的存储区，有编译器根据需要分配，程序中无法指定
+> + 栈：存放基本类型变量数据和对象的引用，当对象本身不放在栈中，而是放在堆中（new出来的想）或者常量池中（字符串常量对象放在常量池中）
+> + 堆：存放所有new出来的对象
+> + 常量池：存放字符串常量和基本类型常量
+> + 静态域：存放静态成员
+
+
 #### 内存结构
 > + <img alt="内存结构" src="./pic/JVM内存结构.png" width="900">
 > > [参考 - JVM 学习笔记（一）内存结构](https://blog.csdn.net/m0_45861545/article/details/120692847)
@@ -54,6 +61,13 @@
 > + JVM 内存区域，开线程影响哪块区域内存？
 > + 对 Dalvik、ART 虚拟机有什么了解？对比？
 
+
+#### Java编译过程
+问：匿名内部类，访问局部变量时为何要final
+答：编译字节码时匿名内部类构造函数传入所访问的局部变量；为了保证预期一致，故匿名内部类内部改变的值不会刷新外部
+  另外为何不成员变量不用加final？答：字节码中匿名内部类中持有外部类的引用，可以访问，也可以修改外部类的成员变量；
+
+
 #### 类加载过程 （需要多看看，重在理解，对于热修复和插件化比较重要）
 > > <img src="./pic/类加载过程.png" width="900"/>
 
@@ -101,12 +115,24 @@
 > > > + 可见性（对多核多线程多能取到最新的值）
 > > > + 有序性（为提高运行效率会指令重排）
 > > >
-> > > [Java 并发编程上篇 -（Synchronized 原理、LockSupport 原理、ReentrantLock 原理）](https://blog.csdn.net/weixin_50280576/article/details/113033975?spm=1001.2014.3001.5502)
-> > > [Java 并发编程中篇 -（JMM、CAS 原理、Volatile 原理）](https://blog.csdn.net/weixin_50280576/article/details/113532093)
-> > > [Java 并发编程下篇 -（线程池）](https://blog.csdn.net/weixin_50280576/article/details/113532107)
-> > > [Java 并发编程下篇 -（JUC、AQS 源码、ReentrantLock 源码）](https://blog.csdn.net/weixin_50280576/article/details/113727645)
+> > * [Java 并发编程上篇 -（Synchronized 原理、LockSupport 原理、ReentrantLock 原理）](https://blog.csdn.net/weixin_50280576/article/details/113033975?spm=1001.2014.3001.5502)
+> > * [Java 并发编程中篇 -（JMM、CAS 原理、Volatile 原理）](https://blog.csdn.net/weixin_50280576/article/details/113532093)
+> > * [Java 并发编程下篇 -（线程池）](https://blog.csdn.net/weixin_50280576/article/details/113532107)
+> > * [Java 并发编程下篇 -（JUC、AQS 源码、ReentrantLock 源码）](https://blog.csdn.net/weixin_50280576/article/details/113727645)
+
 
 #### synchronized 和 volatile关键字
+> + volatile关键字原理，作用
+> > 1. 内存屏障，保证不被cpu指令优化改变执行顺序
+> > 2. 总线嗅探机制，当cpu检测到volatile变量执行写操作时，先原子执行store修改当前工作内存中的值和写回主内存中是的值，
+该机制会将其他cpu工作内存中缓存的该变量副本清空失效，需要使用时需再次从主内存中读取最新值，
+> + synchronized
+> > 非公平锁
+
+#### Java中ReentrantLock的使用
+
+
+[Java中ReentrantLock的使用](https://blog.csdn.net/black_bird_cn/article/details/81913671)
 
 ##### 面试QA
 > > + Q:volatile为什么不能保证i++
@@ -129,6 +155,34 @@ https://www.cnblogs.com/myopensource/p/8177074.html
 * [理解Java线程状态（6种，6种，6种）](https://blog.csdn.net/acc__essing/article/details/127470780)
 
 ##### sleep 、wait、yield 的区别，wait 的线程如何唤醒它
+> * wait和join的区别
+> > wait函数：让当前线程进入等待状态，wait()会与notify()和notifyAll()方法一起使用。notify为唤醒函数
+> > join函数：等待这个线程结束才能执行自已的线程。它的主要起同步作用，使线程之间的执行从“并行”变成“串行”。线程A中调用了线程B的join()方法时，线程执行过程发生改变：线程A，必须等待线程B执行完毕后，才可以继续执行下去
+> > 共同点：
+> > 1. 暂停当前的线程
+>> 2. 都可以通过中断唤醒
+不同点在于：
+
+|    区别    |    wait    |    join    |
+|-------|-------:|-------:|
+| 类	| Object类 | Thread类|
+| 目的	| 线程间通信	|排序，让其串行通过|
+|  同步	| 必须要synchronized	|可以不用synchronized|
+
+> * wait和sleep的区别
+> > wait()：让出CPU资源和锁资源。
+> > sleep(long mills)：让出CPU资源，但是不会释放锁资源。
+> > 看区别，主要是看CPU的运行机制：
+
+它们的区别主要考虑两点：1.cpu是否继续执行、2.锁是否释放掉。
+
+> > * 归根到底：
+wait，notify,notifyall 都是Object对象的方法，是一起使用的，用于锁机制，所以会释放锁
+而sleep是Thread类，跟锁没关系，不会释放锁
+但是两者都会让出cpu资源
+
+
+
 
 ##### 线程池的使用
 
@@ -149,6 +203,15 @@ https://www.cnblogs.com/myopensource/p/8177074.html
 > > - CallerRunsPolicy 调用者执行
 > > - DiscardPolicy 直接丢掉
 > > - DiscardOldestPolicy 丢掉最老的任务
+> > - 打印具体调用栈方便定位
+> > - 间隔一段时间再次添加任务
+> > - 新创建临时线程执行任务
+> > - 综合组合以上方式
+
+> > * 线程池的执行流程是：先判断当前线程数是否大于核心线程数？如果结果为 false，则新建线程并执行任务；如果结果为 true，
+ 则判断任务队列是否已满？如果结果为 false，则把任务添加到任务队列中等待线程执行，否则则判断当前线程数量是否超过最大线程数？如果结果为 false，
+则新建线程执行此任务，否则将执行线程池的拒绝策略
+
 
 
 

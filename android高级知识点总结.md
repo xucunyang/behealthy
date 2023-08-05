@@ -632,3 +632,118 @@ Visual Studio Code
 
 
 ## 项目
+
+
+泛型
+注解
+lambda表达式
+
+RePlugin
+
+rx
+just 输入参数
+map 对于每个just的item参数 进行处理
+
+subscribeOn 指定事件发射源说在的线程环境
+
+observeOn	观察所在的线程 Android中一般 指定AndroidSchedulers.mainThread
+
+flatMap 对于发射源的数据逐个进行处理Observable 合并成Observable集合 接受端可能顺序不一样不保证
+concatMap 将数据连续发送保证顺序 解决flatMap的无序问题
+
+
+Dagger2
+解耦复杂对象构造函数
+
+类的加载过程
+
+AbstractQueuedSynchronizers
+
+ListView & RecycleView
+
+
+长连接&短连接
+
+udp tcp
+
+volatile
+	https://www.cnblogs.com/monkeysayhi/p/7654460.html
+	主内存 -> 工作内存
+	线程操作全局变量时候是拷贝一份副本到局部线程的寄存器中操作的，所以会出现多线程环境操作全局变量出现错乱
+volatile关键字告诉线程直接读取全局变量内存中的值，可以实现修改后立即可见；同时，volatile关键字不允许jvm重新排列指令的执行步骤保证线程安全
+需要注意的是，当进行包含本变量操作时，不保证线程安全
+allocate =
+
+
+gc回收的root
+	系统类加载器加载的类
+	虚拟机栈中的对象，栈帧中的本地变量
+	方法区的静态属性引用的对象
+	方法区常量引用的对象
+	jni本地方法的引用的对象
+
+ArrayList & Vector
+	ArrayList线程不安全，Vector线程安全
+ArrayList & LinkedList
+	 支持随机访问,查询速度快。但是插入和删除都需要移动元素，比起链表开销较大.
+	 插入删除效率高，查询不支持随机访问稍微慢
+
+copyonWrite 实现原理
+
+对多写少的情况
+
+CopyOnWriteList
+
+长连接和短连接的区别
+
+
+ public final <R> Observable<R> map(Function<? super T, ? extends R> mapper) {
+        //第一层
+        return create(new ObservableOnSubscribe<R>() { //新建了一个事件源
+
+            @Override
+            public void call(@NonNull Observer<Object> e) {
+                //第二层
+                subscribe(new Observer<T>() { //新建了一个订阅者，并且与新建的事件源建立了订阅关系
+                   
+                    @Override
+                    public void onNext(T var1) {
+                       //第三层
+                        e.onNext(mapper.call(var1));
+                    }
+                });
+            }
+        });
+    }
+
+// 元注解@Retention(RetentionPolicy.RUNTIME)的作用：说明 注解Carson_Annotation的生命周期 = 保留到程序运行时 & 被加载到 JVM 中
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Carson_Annotation {
+}
+
+<-- 元注解@Retention参数说明 -->
+// RetentionPolicy.RUNTIME：注解保留到程序运行时 & 会被加载进入到 JVM 中，所以在程序运行时可以获取到它们
+// RetentionPolicy.CLASS：注解只被保留到编译进行时 & 不会被加载到 JVM
+// RetentionPolicy.SOURCE：注解只在源码阶段保留 & 在编译器进行编译时将被丢弃忽视。
+
+kotlin apply also let
+
+字节码插桩
+
+socket
+
+线程同步
+
+UI
+	ppi原理
+
+		160ppi  1英寸显示160px   1dp = 1px
+
+		326ppi  10dp  
+
+		330ppi  10dp = (330 / 160) * 10 = 20.6
+		
+	适配
+
+MAT
+	systrace使用

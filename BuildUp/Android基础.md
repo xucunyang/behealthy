@@ -33,6 +33,7 @@ fork进程 分支复制类似
 [Android Binder机制(一) Binder的设计和框架](https://wangkuiwu.github.io/2014/09/01/Binder-Introduce/)
 
 
+
 ### 四大组件
 
 > + Activity
