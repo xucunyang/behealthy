@@ -168,7 +168,12 @@ class MainActivity :
             }.launchIn(lifecycleScope)
 
 //        }
-
+        val mutableSharedFlow = MutableSharedFlow<String>(
+            replay = 1
+        )
+        mutableSharedFlow.shareIn(lifecycleScope, SharingStarted.Eagerly, replay = 2)
+        mutableSharedFlow.stateIn(lifecycleScope, SharingStarted.WhileSubscribed(), "initial v")
+        val mutableStateFlow = MutableStateFlow("initial~~")
     }
 
     fun ss(value: Int) = value == 1

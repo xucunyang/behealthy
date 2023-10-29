@@ -3,8 +3,11 @@ package com.yang.myapplication;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -47,6 +50,111 @@ public class ExampleUnitTest {
         log("shutdown =============== ");
         executor.shutdown();
     }
+
+    class Fruit {
+        public void print() {
+            System.out.println("fruit");
+        }
+    }
+
+    class Apple extends Fruit {
+        public void print() {
+            System.out.println("Apple");
+        }
+    }
+
+    class Orange extends Fruit {
+        public void print() {
+            System.out.println("Orange");
+        }
+    }
+
+
+    @Test
+    public void genericsTest() throws Exception {
+//        List<? extends Fruit> fruits = new ArrayList<>();
+//        fruits.add(new Fruit());
+//        fruits.add(new Apple());
+//        fruits.add(new Orange());
+
+        ArrayList<Fruit> fruits1 = new ArrayList<>();
+        genericsT1(fruits1);
+        for (Fruit fruit : fruits1) {
+            fruit.print();
+//            System.out.println("--> " + );
+        }
+    }
+
+    //定义一个Person类
+    static class Person
+    {
+        private String name;
+        public Person(String name){
+            this.name = name;
+        }
+        public String getNmae(){
+            return this.name;
+        }
+
+        @Override
+        public String toString() {
+            return "Person{" +
+                    "name='" + name + '\'' +
+                    '}';
+        }
+    }
+    // 定义一个Student 并继承 Person
+    static class Student extends Person
+    {
+        Student(String name){
+            super(name);
+        }
+    }
+
+    @Test
+    public void testGenerics2() {
+
+        ArrayList<Person> a1 = new ArrayList<Person>();
+        a1.add(new Person("abc1"));
+        a1.add(new Person("abc2"));
+        a1.add(new Person("abc3"));
+
+        printMethod(a1);
+
+
+        // 下面是错误的。a2存的是Person，存在继承的话，也能放worker。但是等号右边只能存Student，存不进worker.类型安全问题。左右两边要一致
+        ArrayList<Student> a2 = new ArrayList<Student>();
+        a2.add(new Student("abc--1"));
+        a2.add(new Student("abc--2"));
+        a2.add(new Student("abc--3"));
+        printMethod(a2); // ArrayList<Person> a2 = new ArrayList<Student>();
+        //如果我想调用也printMethod(a2);没毛病。怎么做？。 第一想法直接给占位符。但是带来一问题，不能调用具体方法。
+    }
+
+    // 与main方法同级的静态工具类方法
+    public static void printMethod(ArrayList<? super Student> a1){
+        Iterator<? super Student> it = a1.iterator();
+//        a1.add(new Student(""));
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+    }
+
+    public void sop(ArrayList<?> arrayList) {
+         for(Iterator<?> it = arrayList.iterator();it.hasNext();) {
+             Object next = it.next();
+         }
+         arrayList.add(null);
+//         arrayList.add("111");
+    }
+
+    public void genericsT1(List<Fruit> fruits) throws Exception {
+//        List<? extends Fruit> fruits = new ArrayList<>();
+        fruits.add(new Fruit());
+        fruits.add(new Apple());
+        fruits.add(new Orange());
+    }
+
 
     @Test
     public void synchronizedTest() throws Exception {
