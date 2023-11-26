@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Button;
 
-public class MyButton extends Button {
+public class MyButton extends androidx.appcompat.widget.AppCompatButton {
     private static final String TAG = "MyButton";
 
     public MyButton(Context context, AttributeSet attrs) {
