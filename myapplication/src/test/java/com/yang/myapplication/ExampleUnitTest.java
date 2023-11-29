@@ -1,10 +1,7 @@
 package com.yang.myapplication;
 
-import org.junit.Test;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Thread.sleep;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -86,13 +85,14 @@ public class ExampleUnitTest {
     }
 
     //定义一个Person类
-    static class Person
-    {
+    static class Person {
         private String name;
-        public Person(String name){
+
+        public Person(String name) {
             this.name = name;
         }
-        public String getNmae(){
+
+        public String getNmae() {
             return this.name;
         }
 
@@ -103,10 +103,10 @@ public class ExampleUnitTest {
                     '}';
         }
     }
+
     // 定义一个Student 并继承 Person
-    static class Student extends Person
-    {
-        Student(String name){
+    static class Student extends Person {
+        Student(String name) {
             super(name);
         }
     }
@@ -132,19 +132,19 @@ public class ExampleUnitTest {
     }
 
     // 与main方法同级的静态工具类方法
-    public static void printMethod(ArrayList<? super Student> a1){
+    public static void printMethod(ArrayList<? super Student> a1) {
         Iterator<? super Student> it = a1.iterator();
 //        a1.add(new Student(""));
-        while(it.hasNext()){
+        while (it.hasNext()) {
             System.out.println(it.next());
         }
     }
 
     public void sop(ArrayList<?> arrayList) {
-         for(Iterator<?> it = arrayList.iterator();it.hasNext();) {
-             Object next = it.next();
-         }
-         arrayList.add(null);
+        for (Iterator<?> it = arrayList.iterator(); it.hasNext(); ) {
+            Object next = it.next();
+        }
+        arrayList.add(null);
 //         arrayList.add("111");
     }
 
@@ -319,7 +319,7 @@ public class ExampleUnitTest {
         Link cur = head;
         Link pre = null;
         Link tempHeader = null;
-        while(true) {
+        while (true) {
             tempHeader = cur.next;
             cur.next = pre;
             pre = cur;
@@ -339,7 +339,7 @@ public class ExampleUnitTest {
     public void reverseList(Link head) {
         Link cur = head.next;
         head.next = null;
-        while(cur != null) {
+        while (cur != null) {
             Link currNext = cur.next;
             cur.next = head;
             head = cur;
