@@ -50,9 +50,10 @@ class MainActivity :
         testCoroutine()
 
         viewBinding!!.button.setOnClickListener { v: View? ->
+            println("--xcy-->> xxx")
 //            testReg()
-            ARouter.getInstance().build("/app2/main").navigation()
-//            startActivity(Intent(MainActivity@this, MainActivity2::class.java))
+//            ARouter.getInstance().build("/app2/main").navigation()
+            startActivity(Intent(MainActivity@this, SecActivity::class.java))
         }
         //        mViewBinding.linerlayout.setOnClickListener(v -> {
 //            Log.i(TAG, "linerlayout: ");

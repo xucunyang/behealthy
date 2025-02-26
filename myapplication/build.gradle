@@ -5,10 +5,20 @@ plugins {
 
 apply from: "../common.gradle"
 
+apply plugin: 'io.github.wurensen.android-aspectjx'
+
 kapt {
     arguments {
         arg("AROUTER_MODULE_NAME", project.getName())
     }
+}
+
+aspectjx {
+    // 移除kotlin相关，编译错误和提升速度
+    exclude 'kotlin.jvm', 'kotlin.internal'
+    exclude 'kotlinx.coroutines.internal', 'kotlinx.coroutines.android'
+
+    debug = true
 }
 
 dependencies {
