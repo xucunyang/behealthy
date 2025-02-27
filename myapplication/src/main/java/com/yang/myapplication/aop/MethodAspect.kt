@@ -37,15 +37,24 @@ class MethodAspect {
         return null
     }
 
-    @Pointcut("execution(* android.view.View.OnClickListener.onClick(..))")
-    fun setOn1Click() {
+    @Pointcut("set(int com.yang.myapplication.aop.RvTest.testCount)")
+    fun onSetTestCount() {
     }
 
-    @Around("setOn1Click()")
-    fun aroundSetOnClick(joinPoint: ProceedingJoinPoint): Any? {
-        Log.d("MethodAspect", "点击拦截")
-        return aroundOldResult(joinPoint)
+    @Around("onSetTestCount()")
+    fun aroundOnSetTestCount(joinPoint: ProceedingJoinPoint): Any? {
+        val rvTest = joinPoint.target as RvTest
+        Log.d("MethodAspect", "aroundOnSetTestCount before old:${rvTest.count}, new:${joinPoint.args[0]}")
+        val aroundOldResult = aroundOldResult(joinPoint)
+        Log.d("MethodAspect", "aroundOnSetTestCount after ${rvTest.count}, new:${joinPoint.args[0]}")
+        return aroundOldResult
     }
+
+//    @Around("setOn1Click()")
+//    fun aroundSetOnClick(joinPoint: ProceedingJoinPoint): Any? {
+//        Log.d("MethodAspect", "点击拦截")
+//        return aroundOldResult(joinPoint)
+//    }
 
     @Around("call(* android.widget.TextView.setText(java.lang.CharSequence))")
     fun around_TextView_setText(joinPoint: ProceedingJoinPoint): Any? {

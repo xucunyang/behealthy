@@ -31,6 +31,7 @@ import java.lang.reflect.Proxy
 
 class MainActivity :
     BaseActivity<ActivityMainBinding>() {
+
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         log(TAG, "dispatchTouchEvent: " + event.action)
         return super.dispatchTouchEvent(event)
